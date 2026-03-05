@@ -10,7 +10,16 @@
 - B站视频：
   [别再手写书源了！用ChatGPT Codex 全自动转换开源阅读书源（成功率90%）](https://www.bilibili.com/video/BV14JPrzxEd2/?share_source=copy_web&vd_source=13e2e41429e96311a744cc03ef2e7861)
 - 公众号：好用的软件站
-- 微信群：香色闺阁自动写源群（扫码入群，二维码以最新版本为准）
+
+公众号二维码：
+
+![公众号二维码](assets/wechat-official-account-qr.jpg)
+
+- 微信群：香色闺阁自动写源群（扫码入群，二维码以最新版本为准，过期请联系更新）
+
+微信群二维码：
+
+![微信群二维码](assets/wechat-group-qr.jpg)
 
 ## 目录说明
 
