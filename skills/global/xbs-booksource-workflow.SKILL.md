@@ -131,6 +131,48 @@ Prefer:
   - 仅允许 `/book/{aid}-{cid}-{p}.html` 且 `aid/cid` 相同、`p` 递增；
   - 命中“下一章/目录/回详情”一律返回空。
 
+实战补充（2026-03，bxwx）:
+
+- 搜索接口存在站点级限流：`POST /search.html` 连续请求会返回“搜索间隔为30秒，请稍后在试！”页面。
+  - 这属于上游限流，不是解析失败；
+  - 调试与验证需加节流/重试（至少间隔 30 秒）或使用本地 fixture。
+- 搜索表单字段需精确匹配：
+  - `searchtype=all`
+  - `369koolearn=<keyword>`
+- `bookDetail` 常见 `og:novel:read_url` 直接给目录页（`/dir/{aid}/{bid}.htm`），不是阅读入口：
+  - `chapterList.requestInfo` 需同时兼容 `/b/{aid}/{bid}/` 与 `/dir/{aid}/{bid}.htm` 两种输入。
+- 分类页真实路径为 `/bsort{n}/`（如 `/bsort1/`），不要套用其他站点的 `/xuanhuan/2.html` 模板。
+  - `bookWorld` 默认按单页处理（`maxPage=1`），避免盲翻到空页/错误页。
+- 分类列表节点可直接使用 `#newscontent .l ul li`：
+  - 书名：`span.s2 a`
+  - 作者：`span.s4`
+  - 分类：`span.s1`（需去 `[]`）
+  - 更新时间：`span.s5`
+- 正文分页继续使用“同章守卫”：
+  - `#pager_next` 在末页常直接跳下一章（非下一页）；
+  - 仅允许 `/b/{bookId}/{chapterId}(_{page})?.html` 且页码递增。
+- 正文需清洗分页提示与推广尾巴（常见文案）：
+  - “这章没有结束…下一页继续阅读…”
+  - “小主子…下一页继续阅读…”
+  - “喜欢…请大家收藏…更新速度全网最快”
+
+实战补充（2026-03，libahao）:
+
+- 香色闺阁里 `list` 子字段 XPath 统一用 `//` 开头，禁用 `./...` 与 `.//...`。
+  - 错误高发写法：`./td[2]/a/text()`、`./td[3]/a/text()`、`./td[2]/a/@href`
+  - 推荐：`//td[2]/a/text()`、`//td[3]/a/text()`、`//td[2]/a/@href`
+- 能直接取目标字段时，不写“复杂拼接式 JS”：
+  - 例如 `detailUrl/url` 直接用 `//td[2]/a/@href`，避免多余绝对化逻辑引入噪声。
+- 列表字段禁止抓整行文本再拆分：
+  - 不要把 `status/desc/wordCount` 绑定到整段 `tr` 文本；
+  - 采用“列到字段”的窄 XPath，一列一个字段。
+- 所有文本字段默认做空白归一：
+  - `String(result || '').replace(/\\s+/g, ' ').trim()`
+  - 分类名额外去方括号：`.replace(/[\\[\\]]/g, '')`
+- 分类页无 `<img>` 时，允许由 `detailUrl` 反推封面：
+  - `/book/{aid}_{bid}/` -> `/data/image/{bid}.jpg`
+  - 该策略用于 `bookWorld.cover`，可显著减少“分类封面为空”。
+
 ## Step 3: Selector Validation (Critical)
 
 Validate selectors against saved HTML (e.g., `xmllint --html --xpath ...`).
@@ -139,6 +181,7 @@ Validate selectors against saved HTML (e.g., `xmllint --html --xpath ...`).
 
 - If `listLengthOnlyDebug > 0` but fields are empty, change child selectors from `.//...` to `//...`.
 - This parser may not reliably honor relative XPath context under `list`.
+- In 香色 runtime, avoid `./...` in list child fields as well; prefer `//...` for stability.
 - If runtime context is unclear, use JS debug return shape:
   - `return {"config": config, "params": params, "result": result};`
 - Remember `result` changes by stage:

@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-03-06
+- 新增 `libahao` 实战规则沉淀（搜索/分类字段污染修复）：
+  - 明确香色运行时 `list` 子字段 XPath 统一 `//` 开头，禁用 `./...` 写法
+  - 修复“整行文本污染”问题（空白与 `\n` 统一清洗）
+  - 分类封面新增 URL 反推策略：`/book/{aid}_{bid}/ -> /data/image/{bid}.jpg`
+  - 文档同步更新：`RETROSPECT_LOG`、`MAINTENANCE_WORKFLOW`、`XBS_JSON_CODING_RULES`、`xbs-booksource-workflow.SKILL`
+- 新增 `bxwx` 成品书源（DOM + 目录归一化 + 同章分页守卫）：
+  - 搜索：`POST /search.html`（`searchtype=all` + `369koolearn`）
+  - 详情：`og:*` 优先，兼容 `og:novel:read_url` 指向目录页
+  - 目录：`/dir/{aid}/{bid}.htm` 与 `/b/{aid}/{bid}/` 双输入兼容
+  - 正文分页：`/b/{bookId}/{chapterId}(_{page}).html` 同章递增守卫
+  - 分类：新增 `bookWorld`，路径 `/bsort{n}/`，默认单页稳定模式
+- 文档/skill 补充 `bxwx` 经验沉淀：
+  - 搜索限流提示页识别（“搜索间隔为30秒，请稍后在试！”）
+  - 分类路径实测优先（禁止套用他站分类模板）
+  - `read_url` 目录型 URL 归一化策略
+  - 正文尾巴提示清洗规则
+
 ## 2026-03-05
 - 新增 `shuhaoxs` 成品书源（站内可用优先方案）：
   - 搜索：分类遍历 + 关键词过滤（fallback，可用优先）

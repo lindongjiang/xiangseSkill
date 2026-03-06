@@ -213,7 +213,7 @@ return {"url": absUrl(u), "httpHeaders": config.httpHeaders};
 
 章节链接提取（实战优先级，重要）：
 
-- 当 `list` 已经选中章节 `<a>` 节点时，`url/detailUrl` 优先写节点内属性：`@href`（或 `./@href` / `//@href`）
+- 当 `list` 已经选中章节 `<a>` 节点时，`url/detailUrl` 优先写节点内属性：`//@href`（必要时可用 `@href`）
 - 避免在该场景写 `//a/@href[1]` 这类“再全局找一遍”的兜底，容易引入误匹配
 - 相对链接通常可交给客户端自动补全 host；仅在确实没补全时再加 `||@js` 做绝对化
 - `txtdd` 这类目录结构中，`list='//div[@id=\"chapter-list\"]/a'` + `url='//@href'` 已足够稳定
@@ -416,6 +416,40 @@ if (arr.length < 100) return ''; // 最后一页
 return nextPageUrl(page + 1);
 ```
 
+## 4.10) 搜索限流页与目录型 read_url 兼容（bxwx 类）
+
+站点特征：
+
+- 搜索使用本域表单 `POST /search.html`，字段固定为：
+  - `searchtype=all`
+  - `369koolearn=<keyword>`
+- 搜索存在硬限流，短时间重复请求会返回提示页：
+  - `搜索间隔为30秒，请稍后在试！`
+- 详情页 `og:novel:read_url` 可能直接是目录 URL：
+  - `/dir/{aid}/{bid}.htm`
+  - 而非 `/b/{aid}/{bid}/` 阅读入口。
+
+规则建议：
+
+- 搜索调试先做“限流页识别”，不要把限流提示页误判为 XPath 失效。
+- 搜索链路建议保留 `POST` 真实表单形态，减少站点风控差异。
+- `chapterList.requestInfo` 做 URL 归一化时，至少支持两类输入：
+  - `/b/{aid}/{bid}/`
+  - `/dir/{aid}/{bid}.htm`
+- `bookWorld` 分类路径若是站点私有形态（如 `/bsort{n}/`），必须按实测模板写，不复用他站规则。
+- 若分类没有稳定翻页语义（`page=2` 空页/错误页），默认 `maxPage=1`。
+
+正文分页补充（bxwx）：
+
+- `#pager_next` 在章节末页常切到“下一章”。
+- `nextPageUrl` 必须做同章守卫，仅允许：
+  - `/b/{bookId}/{chapterId}(_{page})?.html`
+  - 且 `bookId/chapterId` 相同、`nextPage > currentPage`
+- 正文建议清洗分页提示尾巴，避免残留：
+  - “这章没有结束…下一页继续阅读…”
+  - “小主子…下一页继续阅读…”
+  - “喜欢…请大家收藏…更新速度全网最快”
+
 ## 4.1) 手动 JS 解析（选用）
 
 默认可不启用手动函数；当标准规则难以覆盖时可混合使用。
@@ -526,8 +560,9 @@ return {
 
 推荐规则（兼容优先）：
 
-- 对“跨层级文本抓取”字段，优先使用绝对 XPath：`//...`
-- 对“当前 list 节点自身属性”字段（尤其 `url/detailUrl`），优先使用 `@href` / `./@href` / `//@href`
+- 对“跨层级文本抓取”字段，统一使用绝对 XPath：`//...`
+- 对“当前 list 节点自身属性”字段（尤其 `url/detailUrl`），优先使用 `//.../@href` 或 `//@href`
+- 禁止在 `list` 子字段使用 `./...` 或 `.//...`（香色运行时高频出现上下文偏移）
 - 不要把“当前节点属性读取”过度写成 `//a/@href[1]||@js:...` 复杂链
 
 典型故障特征：
@@ -538,7 +573,32 @@ return {
 此时先确认：
 
 - `list` 是否已定位到正确节点（例如章节 `<a>`）
-- 若已定位，`url/detailUrl` 直接改为 `@href` 或 `//@href` 再测
+- 若已定位，`url/detailUrl` 直接改为 `//@href`（或明确列路径 `//.../@href`）再测
+
+## 4.11) DOM 表格列表污染与封面回推（libahao 类）
+
+站点特征：
+
+- 搜索/分类结果在 `<table><tbody><tr>...</tr></tbody></table>` 中按列展示。
+- 误用宽 XPath 或 `./...` 时，字段容易被整行文本污染（大量换行、空格、`\n`）。
+- 分类页通常无 `<img>` 列，封面需由详情 URL 反解。
+
+规则建议：
+
+- `list` 命中 `tr` 后，子字段坚持“列到字段”：
+  - `cat -> //td[1]/a/text()`
+  - `bookName -> //td[2]/a/text()`
+  - `lastChapterTitle -> //td[3]/a/text()`
+  - `author -> //td[4]/text()`
+  - `updateTime -> //td[5]/text()`
+  - `url/detailUrl -> //td[2]/a/@href`
+- 文本字段统一做空白归一：
+  - `String(result || '').replace(/\\s+/g, ' ').trim()`
+  - 分类额外去方括号：`.replace(/[\\[\\]]/g, '')`
+- 避免绑定整行类字段（如 `status/wordCount/desc`）到 `tr` 文本，除非确有业务需要且已拆分。
+- 分类无封面节点时，使用 URL 反推：
+  - 从 `/book/{aid}_{bid}/` 提取 `bid`
+  - 生成封面：`/data/image/{bid}.jpg`
 
 ## 4.4) `moreKeys` 常用项（筛选 / 分页 / 清洗）
 
