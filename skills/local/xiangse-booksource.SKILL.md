@@ -4,6 +4,7 @@
 - 维护香色闺阁书源（JSON/XBS）
 - 章节列表能出标题但抓不到 `url/detailUrl`
 - 书源命名与发布规范统一
+- 需要把任务交给弱模型（如 Tare）执行
 
 ## 固定规则
 1. 书源名称必须以 `(公众号:好用的软件站)` 结尾。
@@ -53,3 +54,10 @@
 - 名称后缀一致
 - 章节列表返回包含 `title + url + detailUrl`
 - 对 Windows/Termux 用户补充可直接运行命令，不要求用户手改脚本路径。
+
+## 弱模型（Tare）执行模式
+1. 强制引用：`docs/TARE_USAGE_PLAYBOOK.md`
+2. 强制单任务：`new_source / fix_source / convert_only` 三选一
+3. 强制固定输出：仅允许返回手册中的 JSON 结构
+4. 强制命令化交付：必须给可复制命令，不给“建议型段落”
+5. 强制失败显式化：输入不足时只能返回 `status=need_input` + `missing[]`

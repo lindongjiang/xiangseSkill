@@ -140,6 +140,27 @@ python .\tools\scripts\xbs_tool.py json2xbs -i .\in.json -o .\out.xbs
 3) 最后给 roundtrip 校验命令和失败排查点
 ```
 
+## Tare（弱模型）专用用法
+
+如果使用 Tare 这类弱模型，不要直接让它“自由发挥”，请强制走固定协议：
+
+1. 先让它读取：`docs/TARE_USAGE_PLAYBOOK.md`
+2. 每次只给一个任务类型：`new_source / fix_source / convert_only`
+3. 要求它只按“固定输出 JSON”返回结果
+
+可复制提问模板：
+
+```text
+请严格按 /docs/TARE_USAGE_PLAYBOOK.md 执行。
+task_type=fix_source
+site=https://m.libahao.com/
+input_file=/abs/path/libahao_source.json
+target_file=/abs/path/libahao_source_fixed.json
+must_rules=1) list 子字段 XPath 必须 // 开头 2) 去除空白污染 3) 分类 cover 不能为空
+samples=（粘贴你的错误解析 JSON）
+只允许输出固定 JSON，不要输出自由文本。
+```
+
 ### 推荐工作流
 
 1. 先抓站点四类页面样本：搜索、详情、目录、正文。
@@ -154,3 +175,4 @@ python .\tools\scripts\xbs_tool.py json2xbs -i .\in.json -o .\out.xbs
 - `docs/香色书源开发指南与工作流程.md`
 - `docs/XBS_JSON_CODING_RULES.md`
 - `docs/RETROSPECT_LOG.md`
+- `docs/TARE_USAGE_PLAYBOOK.md`

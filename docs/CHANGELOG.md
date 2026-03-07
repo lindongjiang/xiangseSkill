@@ -1,6 +1,11 @@
 # Changelog
 
 ## 2026-03-06
+- 新增 `Tare` 弱模型专用执行手册：
+  - `docs/TARE_USAGE_PLAYBOOK.md`
+  - 固定输入包模板、固定提问模板、固定输出 JSON
+  - 增加“禁止项 + 失败兜底模板”，降低弱模型跑偏概率
+- `README` 与 local skill 同步增加 Tare 交付模式入口
 - 新增跨平台转换入口，兼容 Windows / Termux / macOS / Linux：
   - 新增 `tools/scripts/xbs_tool.py`（`json2xbs/xbs2json/roundtrip/doctor`）
   - `.sh` 脚本改为调用 `xbs_tool.py`，统一执行链路
