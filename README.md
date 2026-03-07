@@ -69,11 +69,16 @@ $env:XBSREBUILD_BIN="D:\tools\xbsrebuild.exe"
 ### 推荐（跨平台统一命令）
 
 ```bash
+python tools/scripts/check_xiangse_schema.py <input.json>
 python tools/scripts/xbs_tool.py doctor
 python tools/scripts/xbs_tool.py json2xbs -i <input.json> -o <output.xbs>
 python tools/scripts/xbs_tool.py xbs2json -i <input.xbs> -o <output.json>
 python tools/scripts/xbs_tool.py roundtrip -i <input.json> -p <output_prefix>
 ```
+
+说明：
+- `xbs_tool.py` 在 `json2xbs/roundtrip` 会自动执行 schema 检查并在失败时中断。
+- 仅在你明确要跳过时使用：`--skip-schema-check`。
 
 ### macOS / Linux / Termux（兼容旧命令）
 
@@ -147,6 +152,7 @@ python .\tools\scripts\xbs_tool.py json2xbs -i .\in.json -o .\out.xbs
 1. 先让它读取：`docs/TARE_USAGE_PLAYBOOK.md`
 2. 每次只给一个任务类型：`new_source / fix_source / convert_only`
 3. 要求它只按“固定输出 JSON”返回结果
+4. 强制先跑：`python tools/scripts/check_xiangse_schema.py <json>`
 
 可复制提问模板：
 

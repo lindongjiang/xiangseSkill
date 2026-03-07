@@ -10,6 +10,7 @@
 3. 输出必须是固定 JSON 结构，不允许自由散文。
 4. 先出可运行结果，再做解释。
 5. 命令全部可复制执行（Windows 给 PowerShell/CMD，移动端给 Termux）。
+6. 先做 schema 体检，再做转换；体检不通过禁止进入 `json2xbs`。
 
 ## 2. 输入包模板（必须给全）
 
@@ -90,6 +91,7 @@ must_rules=使用 xbs_tool.py，给出可复制命令
     }
   ],
   "commands": [
+    "python tools/scripts/check_xiangse_schema.py /abs/in.json",
     "python tools/scripts/xbs_tool.py doctor",
     "python tools/scripts/xbs_tool.py json2xbs -i /abs/in.json -o /abs/out.xbs",
     "python tools/scripts/xbs_tool.py roundtrip -i /abs/in.json -p /abs/verify/out"
@@ -100,9 +102,15 @@ must_rules=使用 xbs_tool.py，给出可复制命令
     "分类 cover 可返回"
   ],
   "need_user_confirm": [],
+  "schema_check": "PASS",
+  "schema_errors": [],
   "next_action": "可直接执行 commands"
 }
 ```
+
+输出里必须包含：
+- `schema_check`: `PASS` 或 `FAIL`
+- 若 `FAIL`，必须给 `schema_errors[]`，且 `next_action` 只能是“先修 schema”
 
 ## 5. 禁止项（弱模型必须禁）
 
@@ -111,6 +119,11 @@ must_rules=使用 xbs_tool.py，给出可复制命令
 3. 禁止输出“可能/大概/建议你再试试”式结论，不给可执行命令。
 4. 禁止跳过 roundtrip 验证。
 5. 禁止把 `./...` 作为 list 子字段 XPath。
+6. 禁止输出非香色字段：
+   - `bookSourceName/bookSourceUrl/bookSourceGroup/httpUserAgent`
+7. 禁止在 `requestInfo` 使用：
+   - `java.getParams()`
+   - `method:`、`data:`、`headers:`
 
 ## 6. 失败兜底模板
 

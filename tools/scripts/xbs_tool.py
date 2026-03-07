@@ -82,8 +82,23 @@ def _run_xbsrebuild(action: str, input_path: Path, output_path: Path) -> None:
         raise RuntimeError(f"xbsrebuild command failed: {' '.join(cmd)}")
 
 
+def _run_schema_check(input_json: Path) -> None:
+    checker = Path(__file__).resolve().parent / "check_xiangse_schema.py"
+    if not checker.exists():
+        raise FileNotFoundError(f"schema checker not found: {checker}")
+    cmd = [sys.executable, str(checker), str(input_json)]
+    completed = subprocess.run(cmd)
+    if completed.returncode != 0:
+        raise RuntimeError(
+            "xiangse schema check failed. Fix JSON first, or use --skip-schema-check if you really need to bypass."
+        )
+
+
 def _command_json2xbs(args: argparse.Namespace) -> None:
-    _run_xbsrebuild("json2xbs", Path(args.input).resolve(), Path(args.output).resolve())
+    input_json = Path(args.input).resolve()
+    if not args.skip_schema_check:
+        _run_schema_check(input_json)
+    _run_xbsrebuild("json2xbs", input_json, Path(args.output).resolve())
     print(f"OK: {Path(args.output).resolve()}")
 
 
@@ -97,6 +112,9 @@ def _command_roundtrip(args: argparse.Namespace) -> None:
     prefix = Path(args.prefix).resolve()
     xbs_path = prefix.with_suffix(".xbs")
     roundtrip_json = prefix.with_suffix(".roundtrip.json")
+
+    if not args.skip_schema_check:
+        _run_schema_check(input_json)
 
     _run_xbsrebuild("json2xbs", input_json, xbs_path)
     _run_xbsrebuild("xbs2json", xbs_path, roundtrip_json)
@@ -131,6 +149,11 @@ def build_parser() -> argparse.ArgumentParser:
     p1 = sub.add_parser("json2xbs", help="Convert JSON to XBS")
     p1.add_argument("-i", "--input", required=True, help="Input JSON path")
     p1.add_argument("-o", "--output", required=True, help="Output XBS path")
+    p1.add_argument(
+        "--skip-schema-check",
+        action="store_true",
+        help="Skip xiangse schema guard before conversion",
+    )
     p1.set_defaults(func=_command_json2xbs)
 
     p2 = sub.add_parser("xbs2json", help="Convert XBS to JSON")
@@ -141,6 +164,11 @@ def build_parser() -> argparse.ArgumentParser:
     p3 = sub.add_parser("roundtrip", help="Convert JSON -> XBS -> JSON")
     p3.add_argument("-i", "--input", required=True, help="Input JSON path")
     p3.add_argument("-p", "--prefix", required=True, help="Output prefix path")
+    p3.add_argument(
+        "--skip-schema-check",
+        action="store_true",
+        help="Skip xiangse schema guard before conversion",
+    )
     p3.set_defaults(func=_command_roundtrip)
 
     p4 = sub.add_parser("doctor", help="Show environment diagnosis")

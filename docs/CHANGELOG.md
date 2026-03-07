@@ -1,6 +1,11 @@
 # Changelog
 
 ## 2026-03-06
+- 新增香色 schema 防跑偏机制（针对弱模型输出偏移）：
+  - 新增 `tools/scripts/check_xiangse_schema.py`
+  - 转换前强制 schema 体检：拦截 `bookSourceName/*`、`java.getParams()`、`method/data/headers` 等非香色写法
+  - `xbs_tool.py` 的 `json2xbs/roundtrip` 默认自动执行 schema 体检（失败即中断）
+  - `xbs-booksource-workflow.SKILL`、`xiangse-booksource.SKILL`、`TARE_USAGE_PLAYBOOK`、`README` 同步加入硬门槛
 - 新增 `Tare` 弱模型专用执行手册：
   - `docs/TARE_USAGE_PLAYBOOK.md`
   - 固定输入包模板、固定提问模板、固定输出 JSON

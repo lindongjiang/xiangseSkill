@@ -25,6 +25,9 @@ Implement or fix text book sources for 香色闺阁-compatible formats with a de
   - detail page
   - chapter list page
   - chapter content page
+- Hard gate before conversion (must pass):
+  - `python tools/scripts/check_xiangse_schema.py <source.json>`
+  - If this fails, do NOT convert to XBS first; fix schema first.
 
 ## Step 2: Build or Repair JSON Rules
 
@@ -41,6 +44,20 @@ Required action fields:
 - `parserID`
 - `responseFormatType`
 - `requestInfo`
+
+香色 schema 强约束（防跑偏，必须满足）:
+
+- Top-level must be: `{ \"<sourceAlias>\": { ... } }` (source config nested under alias key).
+- Source config must use:
+  - `sourceName/sourceUrl/sourceType/enable/weight`
+- Forbidden legacy top-level keys:
+  - `bookSourceName/bookSourceUrl/bookSourceGroup/httpUserAgent`
+- `requestInfo @js` runtime must use `config/params/result`.
+- Forbidden runtime/transport patterns in `requestInfo`:
+  - `java.getParams()`
+  - `method:` (use `POST`)
+  - `data:` (use `httpParams`)
+  - `headers:` (use `httpHeaders`)
 
 Prefer:
 
@@ -209,6 +226,8 @@ Preferred (cross-platform, including Windows/Termux):
 - `python tools/scripts/xbs_tool.py json2xbs -i <input.json> -o <output.xbs>`
 - `python tools/scripts/xbs_tool.py xbs2json -i <input.xbs> -o <output.json>`
 - `python tools/scripts/xbs_tool.py roundtrip -i <input.json> -p <output_prefix>`
+- Note: `json2xbs/roundtrip` auto-run schema guard; conversion aborts on schema mismatch.
+- If absolutely needed, bypass with `--skip-schema-check` (not recommended for delivery artifacts).
 
 Fallback:
 
@@ -225,6 +244,7 @@ When delivering results, always provide:
 - absolute path to XBS
 - SHA256 of XBS
 - brief debug note if any compatibility workaround was applied
+- schema check result (`PASS/FAIL`) and command used.
 
 ## Do/Don't
 

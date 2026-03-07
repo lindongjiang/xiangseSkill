@@ -37,6 +37,9 @@
     - `nextPageUrl` 判定要叠加 `chapterorder` 页范围校验，不能只看 `list.length`。
 
 ## 2. 转换与验证
+- 转换前先执行 schema 体检（硬门槛）：
+  - `python tools/scripts/check_xiangse_schema.py <input.json>`
+  - 若失败，先修结构，不进入 `json2xbs`。
 - 优先使用跨平台入口：
   - `python tools/scripts/xbs_tool.py json2xbs -i <input.json> -o <output.xbs>`
   - `python tools/scripts/xbs_tool.py xbs2json -i <input.xbs> -o <output.json>`

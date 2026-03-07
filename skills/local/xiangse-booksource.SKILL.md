@@ -30,6 +30,14 @@
    - `python tools/scripts/xbs_tool.py xbs2json -i <xbs> -o <json>`
    - `python tools/scripts/xbs_tool.py roundtrip -i <json> -p <prefix>`
    - 仅在用户明确是 macOS/Linux/bash 时，再给 `.sh` 版本命令。
+10. 转换前必须先过 schema 体检（硬门槛）：
+   - `python tools/scripts/check_xiangse_schema.py <json>`
+   - 若失败，先修 JSON 结构，再做 json2xbs。
+   - `xbs_tool.py` 已默认内置此检查；失败会直接中断转换。
+11. 严禁混入非香色 schema 字段与运行时：
+   - 禁用：`bookSourceName/bookSourceUrl/bookSourceGroup/httpUserAgent`
+   - 禁用：`java.getParams()`、`method:`、`data:`、`headers:`
+   - 使用：`sourceName/sourceUrl/sourceType` + `config/params/result` + `POST/httpParams/httpHeaders`
 
 ## 推荐模板
 ```json
@@ -61,3 +69,4 @@
 3. 强制固定输出：仅允许返回手册中的 JSON 结构
 4. 强制命令化交付：必须给可复制命令，不给“建议型段落”
 5. 强制失败显式化：输入不足时只能返回 `status=need_input` + `missing[]`
+6. 强制 schema 先行：返回结果里必须包含 `check_xiangse_schema.py` 的执行结论。
