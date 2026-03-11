@@ -40,17 +40,29 @@
 ## 环境要求
 
 - Python 3.9+
-- Go 1.22+（当你没有预编译 `xbsrebuild` 可执行文件时需要）
+- Go 1.22+（仅在命中源码 fallback 时需要）
 - `xbsrebuild` 工具满足任意一种即可：
-  - `xbsrebuild` 已加入 `PATH`
   - 设置 `XBSREBUILD_BIN` 指向可执行文件（Windows 可指向 `.exe`）
+  - Windows 直接使用仓库内置 `tools/bin/windows/xbsrebuild.exe`（无需 Go）
+  - `xbsrebuild` 已加入 `PATH`
   - 设置 `XBSREBUILD_ROOT` 指向 `xbsrebuild` 源码目录（脚本会自动 `go run`）
+  - 使用仓库内置源码快照 `tools/vendor/xbsrebuild`（脚本自动兜底）
+
+## 已内置引入 xbsrebuild（Vendor Snapshot）
+
+为降低外部仓推送权限对日常使用的影响，本仓已内置 `xbsrebuild` 源码快照：
+- 内置路径：`tools/vendor/xbsrebuild/`
+- 上游仓库：[ne1llee/xbsrebuild](https://github.com/ne1llee/xbsrebuild)
+- 当前同步基线：`5cd1249`
+- 追溯文件：`tools/vendor/xbsrebuild/UPSTREAM_SOURCE.md`
 
 默认会按以下顺序自动探测：
 1. `XBSREBUILD_BIN`
-2. `PATH` 中的 `xbsrebuild`
-3. `XBSREBUILD_ROOT`
-4. 仓库同级目录 `../xbsrebuild`
+2. 内置 Windows 二进制 `tools/bin/windows/xbsrebuild.exe`
+3. `PATH` 中的 `xbsrebuild`
+4. `XBSREBUILD_ROOT`
+5. 仓库同级目录 `../xbsrebuild`
+6. 仓库内置源码 `tools/vendor/xbsrebuild`
 
 建议显式设置：
 

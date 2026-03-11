@@ -110,6 +110,23 @@
   - 校验 `metadata.sha256` 与文件实际 SHA256 一致
   - 跑一轮 `json2xbs/xbs2json/roundtrip` 基础回归
 
+## 3.2 内置 vendored 源码同步流程（运维契约）
+- vendored 路径：`tools/vendor/xbsrebuild/`
+- 上游仓库：`https://github.com/ne1llee/xbsrebuild`
+- 同步方式：源码快照（不保留 `.git` 历史）
+- 同步步骤：
+  - 从上游基线 commit 导出源码，排除 `.git/` 与构建产物缓存
+  - 覆盖更新 `tools/vendor/xbsrebuild/`
+  - 更新 `tools/vendor/xbsrebuild/UPSTREAM_SOURCE.md`（仓库地址、同步 commit、同步日期）
+  - 执行 `python tools/scripts/xbs_tool.py doctor`，确认 `vendored_xbsrebuild_root_exists: True`
+- 运行时探测顺序（固定）：
+  1. `XBSREBUILD_BIN`
+  2. `tools/bin/windows/xbsrebuild.exe`
+  3. PATH `xbsrebuild`
+  4. `XBSREBUILD_ROOT`
+  5. 同级 `../xbsrebuild`
+  6. `tools/vendor/xbsrebuild`
+
 ## 4. 复盘阶段
 - 将问题与结论写入 `docs/RETROSPECT_LOG.md`。
 - 更新 skill 文档与通用规则文档。

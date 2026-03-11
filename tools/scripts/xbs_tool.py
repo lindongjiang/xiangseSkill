@@ -25,15 +25,8 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
-def _default_xbsrebuild_root(repo_root: Path) -> Path | None:
-    candidates = [
-        repo_root.parent / "xbsrebuild",
-        repo_root / "xbsrebuild",
-    ]
-    for path in candidates:
-        if path.exists():
-            return path
-    return None
+def _vendored_xbsrebuild_root(repo_root: Path) -> Path:
+    return repo_root / "tools" / "vendor" / "xbsrebuild"
 
 
 def _is_windows() -> bool:
@@ -64,25 +57,39 @@ def _resolve_runner(repo_root: Path) -> tuple[list[str], Path | None, str]:
     if path_bin:
         return [path_bin], None, "path_bin"
 
-    # 4) go run fallback
+    # 4) go run via XBSREBUILD_ROOT
     xbsrebuild_root = os.environ.get("XBSREBUILD_ROOT", "").strip()
     if xbsrebuild_root:
         root = Path(xbsrebuild_root).expanduser().resolve()
-    else:
-        root = _default_xbsrebuild_root(repo_root)
+        if root.exists():
+            if not shutil.which("go"):
+                raise RuntimeError(
+                    "go command not found. Install Go or set XBSREBUILD_BIN / built-in xbsrebuild.exe."
+                )
+            return ["go", "run", "."], root, "xbsrebuild_root_env"
 
-    if not root or not root.exists():
-        raise FileNotFoundError(
-            "Cannot find xbsrebuild. Set XBSREBUILD_BIN, place built-in tools/bin/windows/xbsrebuild.exe (Windows), "
-            "or set XBSREBUILD_ROOT / install xbsrebuild in PATH."
-        )
+    # 5) sibling external repo fallback
+    sibling_root = (repo_root.parent / "xbsrebuild").resolve()
+    if sibling_root.exists():
+        if not shutil.which("go"):
+            raise RuntimeError(
+                "go command not found. Install Go or set XBSREBUILD_BIN / built-in xbsrebuild.exe."
+            )
+        return ["go", "run", "."], sibling_root, "sibling_root"
 
-    if not shutil.which("go"):
-        raise RuntimeError(
-            "go command not found. Install Go or set XBSREBUILD_BIN / built-in xbsrebuild.exe."
-        )
+    # 6) vendored source fallback
+    vendored_root = _vendored_xbsrebuild_root(repo_root).resolve()
+    if vendored_root.exists():
+        if not shutil.which("go"):
+            raise RuntimeError(
+                "go command not found. Install Go or set XBSREBUILD_BIN / built-in xbsrebuild.exe."
+            )
+        return ["go", "run", "."], vendored_root, "vendored_root"
 
-    return ["go", "run", "."], root, "go_run_root"
+    raise FileNotFoundError(
+        "Cannot find xbsrebuild. Set XBSREBUILD_BIN, use built-in tools/bin/windows/xbsrebuild.exe (Windows), "
+        "or provide Go runtime with XBSREBUILD_ROOT/sibling/vendored source."
+    )
 
 
 def _run_xbsrebuild(action: str, input_path: Path, output_path: Path) -> None:
@@ -171,6 +178,8 @@ def _command_doctor(_: argparse.Namespace) -> None:
     repo_root = _repo_root()
     builtin_bin = _builtin_windows_bin(repo_root)
     builtin_meta = repo_root / "tools" / "bin" / "windows" / "xbsrebuild.metadata.json"
+    vendored_root = _vendored_xbsrebuild_root(repo_root)
+    sibling_root = repo_root.parent / "xbsrebuild"
     print(f"repo_root: {repo_root}")
     print(f"python: {sys.executable}")
     print(f"platform: {platform.platform()}")
@@ -183,6 +192,10 @@ def _command_doctor(_: argparse.Namespace) -> None:
     print(f"builtin_windows_bin_exists: {builtin_bin.exists()}")
     print(f"builtin_windows_metadata: {builtin_meta}")
     print(f"builtin_windows_metadata_exists: {builtin_meta.exists()}")
+    print(f"sibling_xbsrebuild_root: {sibling_root}")
+    print(f"sibling_xbsrebuild_root_exists: {sibling_root.exists()}")
+    print(f"vendored_xbsrebuild_root: {vendored_root}")
+    print(f"vendored_xbsrebuild_root_exists: {vendored_root.exists()}")
     if builtin_meta.exists():
         try:
             data = json.loads(builtin_meta.read_text(encoding="utf-8"))

@@ -11,6 +11,19 @@
     4) `XBSREBUILD_ROOT` + `go run`
   - `doctor` 新增内置二进制探测与命中来源输出
   - Windows 入口补齐：`.cmd` 增强 + 新增 `.ps1`（json2xbs/xbs2json/roundtrip）
+- 内置迁移 `xbsrebuild` 源码快照（vendor）：
+  - 新增目录：`tools/vendor/xbsrebuild/`（整仓源码快照，不含 `.git`）
+  - 新增来源追溯：`tools/vendor/xbsrebuild/UPSTREAM_SOURCE.md`
+  - 记录上游仓库：`https://github.com/ne1llee/xbsrebuild`
+  - 当前同步 commit：`5cd1249`
+  - `xbs_tool.py` runner 探测顺序扩展为：
+    1) `XBSREBUILD_BIN`
+    2) 内置 `tools/bin/windows/xbsrebuild.exe`
+    3) PATH
+    4) `XBSREBUILD_ROOT`
+    5) 同级 `../xbsrebuild`
+    6) 内置 vendored `tools/vendor/xbsrebuild`
+  - `doctor` 新增 `sibling_xbsrebuild_root*` 与 `vendored_xbsrebuild_root*` 诊断输出
 - 新增导入闪退根因沉淀（StandarReader 2.56.1 / Mac Catalyst）：
   - 崩溃指纹：`NSInvalidArgumentException` + `-[__NSArrayI allKeys]`
   - 根因：`bookWorld.categories` 使用数组形态，客户端按字典读取导致崩溃

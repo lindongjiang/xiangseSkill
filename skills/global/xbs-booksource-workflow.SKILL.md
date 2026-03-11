@@ -282,8 +282,15 @@ Preferred (cross-platform, including Windows/Termux):
 - Note: `json2xbs/roundtrip` auto-run schema guard; conversion aborts on schema mismatch.
 - If absolutely needed, bypass with `--skip-schema-check` (not recommended for delivery artifacts).
 - Windows 开箱即用约束（新增）：
-  - 默认 runner 优先级：`XBSREBUILD_BIN` > 内置 `tools/bin/windows/xbsrebuild.exe` > PATH > `XBSREBUILD_ROOT` + `go run`
+  - 默认 runner 优先级：
+    1) `XBSREBUILD_BIN`
+    2) 内置 `tools/bin/windows/xbsrebuild.exe`
+    3) PATH
+    4) `XBSREBUILD_ROOT` + `go run`
+    5) 同级 `../xbsrebuild` + `go run`
+    6) 内置 `tools/vendor/xbsrebuild` + `go run`
   - Windows 默认无需 Go（内置 EXE 可直接转换）
+  - 默认不依赖外部同级仓；即使没有 `../xbsrebuild`，也可回退到仓内 vendored 源码。
   - 可选入口：
     - CMD：`json2xbs.cmd / xbs2json.cmd / roundtrip_check.cmd`
     - PowerShell：`json2xbs.ps1 / xbs2json.ps1 / roundtrip_check.ps1`

@@ -35,6 +35,7 @@
    - `python tools/scripts/xbs_tool.py roundtrip -i <json> -p <prefix>`
    - 仅在用户明确是 macOS/Linux/bash 时，再给 `.sh` 版本命令。
    - Windows 默认无需 Go：优先使用仓库内置 `tools/bin/windows/xbsrebuild.exe`。
+   - 默认不依赖外部同级 `../xbsrebuild` 仓库；缺失时自动回退到仓内 `tools/vendor/xbsrebuild`。
    - Windows 可选入口：
      - CMD：`json2xbs.cmd / xbs2json.cmd / roundtrip_check.cmd`
      - PowerShell：`json2xbs.ps1 / xbs2json.ps1 / roundtrip_check.ps1`

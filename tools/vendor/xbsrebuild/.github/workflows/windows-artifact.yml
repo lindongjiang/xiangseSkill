@@ -1,0 +1,49 @@
+name: Windows Artifact
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-windows-amd64:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ">=1.20.0"
+
+      - name: Build windows amd64
+        run: |
+          mkdir -p dist
+          GOOS=windows GOARCH=amd64 go build -ldflags '-w -s' -o dist/xbsrebuild.exe .
+          sha256sum dist/xbsrebuild.exe > dist/xbsrebuild.exe.sha256
+          commit_sha="$(git rev-parse --short HEAD)"
+          build_time="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          cat > dist/windows-amd64-metadata.json <<EOF
+          {
+            "name": "xbsrebuild",
+            "os": "windows",
+            "arch": "amd64",
+            "binary": "xbsrebuild.exe",
+            "sha256_file": "xbsrebuild.exe.sha256",
+            "git_commit": "${commit_sha}",
+            "build_time_utc": "${build_time}"
+          }
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xbsrebuild-windows-amd64
+          path: |
+            dist/xbsrebuild.exe
+            dist/xbsrebuild.exe.sha256
+            dist/windows-amd64-metadata.json
