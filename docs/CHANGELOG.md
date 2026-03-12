@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-03-12
+- 新增“真实模拟测试”能力（导入前自动验收闭环）：
+  - 新增 `tools/validator` Node 引擎（CLI 模式）：
+    - 保留核心能力：`requestBuilder/stepExecutor/validationService/httpService/jsSandbox`
+    - 四步强制：`searchBook -> bookDetail -> chapterList -> chapterContent`
+  - 新增 `xbs_tool.py` 子命令：
+    - `simulate-live`（真实网络请求）
+    - `simulate-fixture`（本地样本回放）
+  - 新命令自动串联流程：
+    - `import-fix -> schema_check -> editor_check -> simulate`
+  - 新增风控归因：
+    - 命中 `403/429` 与 Cloudflare/challenge 特征时输出 `blocked`
+    - 与 parser 失败分开标记，报告提供 `blocked_reason`
+  - 新增机读报告字段：
+    - `schema_check`、`editor_check`、`simulation_verdict`、`overall_verdict`
+    - 四步请求/响应摘要、失败原因、阻断原因
+- 文档与 skill 同步：
+  - `README` 增加 Node 依赖与 `simulate-live/simulate-fixture` 用法
+  - global/local skill 增加“导入前四步模拟”硬门槛
+  - `MAINTENANCE_WORKFLOW` 增加模拟测试发布前检查
+  - `TARE_USAGE_PLAYBOOK` 固定输出新增 `simulation_verdict/blocked_reason`
+
 ## 2026-03-11
 - 香色闺阁规则提取能力收敛（Xiangse-only）：
   - 目标客户端明确为 StandarReader 2.56.1，不再以安卓阅读/跨客户端兼容为目标

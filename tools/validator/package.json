@@ -1,0 +1,15 @@
+{
+  "name": "xiangse-validator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone Xiangse (StandarReader 2.56.1) simulation validator",
+  "scripts": {
+    "run": "node src/cli.js"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "jsdom": "^26.1.0",
+    "quickjs-emscripten": "^0.31.0"
+  }
+}

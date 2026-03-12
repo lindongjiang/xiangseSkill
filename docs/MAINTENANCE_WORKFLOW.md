@@ -55,6 +55,15 @@
     - `python tools/scripts/xbs_tool.py profile -i <input.json> -o <editor_safe.json> --profile editor_safe`
   - 兼容底线：`weight` 必须为整数字符串（默认 `"9999"`）
   - 若线上崩溃日志出现 `-[__NSCFNumber length]`，优先判定为字段类型错配，先排查 `weight` 是否为数字。
+- 导入前执行真实模拟四步链路（新增硬门槛）：
+  - `python tools/scripts/xbs_tool.py simulate-live -i <input.xbs|input.json> --keyword 都市 --book-index 0 --chapter-index 0 --report <simulate_report.json>`
+  - 固定四步：`searchBook -> bookDetail -> chapterList -> chapterContent`
+  - 判定：
+    - `pass`：规则链路通过
+    - `blocked`：站点风控（403/429/challenge），需单独记录阻断原因
+    - `fail`：规则解析失败，按步骤定位修复
+  - 无网络调试可用：
+    - `python tools/scripts/xbs_tool.py simulate-fixture -i <input.xbs|input.json> --fixtures <fixtures_dir_or_map> --report <simulate_fixture_report.json>`
 - 优先使用跨平台入口：
   - `python tools/scripts/xbs_tool.py json2xbs -i <input.json> -o <output.xbs>`
   - `python tools/scripts/xbs_tool.py xbs2json -i <input.xbs> -o <output.json>`
@@ -103,6 +112,7 @@
 - 发布前检查（必须）：
   - 客户端导入稳定（不闪退）
   - 编辑页保存稳定（不改保存 / 改名保存 / 改字段保存）
+  - 导入前模拟四步通过（或明确 blocked 根因）
   - 正文解密可用（非空、非密文）
   - 分类能力完整（`bookWorld/requestFilters`）
   - 交付备注包含：`公众号:好用的软件站`

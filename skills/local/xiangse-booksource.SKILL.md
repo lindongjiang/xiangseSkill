@@ -51,7 +51,7 @@
 13. `sourceType` 必须为 `"text"`（硬约束），不再接受 `0/text` 混用。
 14. 遇到旧源导入失败时先走导入修复流水线：
    - `python tools/scripts/xbs_tool.py import-fix -i <input.xbs|input.json> -o <fixed.json> --to-xbs <fixed.xbs> --report <fix_report.json>`
-   - 再执行：`check_xiangse_schema.py -> check-editor -> json2xbs`
+   - 再执行：`check_xiangse_schema.py -> check-editor -> simulate-live -> json2xbs`
 15. StandarReader 2.56.1 若出现“编辑保存闪退”，切换 `editor_safe` 兼容模式：
    - `python tools/scripts/xbs_tool.py check-editor -i <json>`
    - `python tools/scripts/xbs_tool.py profile -i <json> -o <editor_safe.json> --profile editor_safe`
@@ -61,6 +61,9 @@
 17. 需要批量修复历史书源时使用：
    - `python tools/scripts/xbs_tool.py normalize-2561 -i <json_or_dir> --rebuild-xbs --report <report.json>`
 18. `editor_safe` 仅做字段降级，不改变香色顶层结构（仍保持 `{alias:{sourceName...}}`）。
+19. 交付前必须跑真实模拟四步链路（不导入 App）：
+   - `python tools/scripts/xbs_tool.py simulate-live -i <input.xbs|input.json> --keyword 都市 --book-index 0 --chapter-index 0 --report <simulate_report.json>`
+   - `simulation_verdict` 必须为 `pass`；若是 `blocked`，按风控阻断处理，不得误判为 parser 成功。
 
 ## 推荐模板
 ```json
@@ -87,6 +90,9 @@
   - 不改保存不闪退
   - 改名保存不闪退
   - 改 1 个规则字段后保存不闪退
+- 模拟测试稳定性（导入前）：
+  - `simulate-live` 四步均 pass
+  - 若 blocked，备注中必须写明阻断原因（如 `403/challenge`）
 - 章节列表返回包含 `title + url + detailUrl`
 - 若章节返回加密正文（如 `encrypt=1`），必须给出“解密成功且正文非空”的验证结论
 - 分类功能不可缺失：`bookWorld` 与 `requestFilters` 两者都应提供；若站点限制无法提供，需在 `delivery_notes` 说明原因与降级策略

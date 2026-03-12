@@ -97,6 +97,7 @@ must_rules=使用 xbs_tool.py，给出可复制命令
     "python tools/scripts/xbs_tool.py import-fix -i /abs/in.decoded.json -o /abs/fixed.json --to-xbs /abs/fixed.xbs --report /abs/fix_report.json",
     "python tools/scripts/check_xiangse_schema.py /abs/fixed.json",
     "python tools/scripts/xbs_tool.py check-editor -i /abs/fixed.json",
+    "python tools/scripts/xbs_tool.py simulate-live -i /abs/fixed.json --keyword 都市 --book-index 0 --chapter-index 0 --report /abs/fixed.simulate.json",
     "python tools/scripts/xbs_tool.py doctor",
     "python tools/scripts/xbs_tool.py json2xbs -i /abs/fixed.json -o /abs/out.xbs",
     "python tools/scripts/xbs_tool.py roundtrip -i /abs/fixed.json -p /abs/verify/out"
@@ -112,8 +113,11 @@ must_rules=使用 xbs_tool.py，给出可复制命令
   "need_user_confirm": [],
   "schema_check": "PASS",
   "editor_check": "PASS",
+  "simulation_verdict": "pass",
+  "blocked_reason": "",
   "schema_errors": [],
   "editor_errors": [],
+  "simulation_errors": [],
   "next_action": "可直接执行 commands"
 }
 ```
@@ -121,6 +125,8 @@ must_rules=使用 xbs_tool.py，给出可复制命令
 输出里必须包含：
 - `schema_check`: `PASS` 或 `FAIL`
 - `editor_check`: `PASS` / `WARN` / `FAIL`
+- `simulation_verdict`: `pass` / `fail` / `blocked`
+- `blocked_reason`: 命中风控时必须填写（例如 `HTTP 403 blocked by Cloudflare challenge`）
 - `delivery_notes[]`：必须至少包含 `公众号:好用的软件站`
 - 若 `FAIL`，必须给 `schema_errors[]`，且 `next_action` 只能是“先修 schema”
 

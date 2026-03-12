@@ -42,6 +42,7 @@
 ## 环境要求
 
 - Python 3.9+
+- Node.js 18+（`simulate-live/simulate-fixture` 需要，首次执行前运行 `cd tools/validator && npm install`）
 - Go 1.22+（仅在命中源码 fallback 时需要）
 - `xbsrebuild` 工具满足任意一种即可：
   - 设置 `XBSREBUILD_BIN` 指向可执行文件（Windows 可指向 `.exe`）
@@ -85,6 +86,9 @@ $env:XBSREBUILD_BIN="D:\tools\xbsrebuild.exe"
 ```bash
 python tools/scripts/xbs_tool.py import-fix -i <input.xbs|input.json> -o <fixed.json> --to-xbs <fixed.xbs> --report <fix_report.json>
 python tools/scripts/check_xiangse_schema.py <input.json>
+python tools/scripts/xbs_tool.py check-editor -i <input.json>
+python tools/scripts/xbs_tool.py simulate-live -i <input.xbs|input.json> --keyword 都市 --book-index 0 --chapter-index 0 --report <simulate_report.json>
+python tools/scripts/xbs_tool.py simulate-fixture -i <input.xbs|input.json> --fixtures <fixtures_dir_or_map> --report <simulate_fixture_report.json>
 python tools/scripts/xbs_tool.py doctor
 python tools/scripts/xbs_tool.py json2xbs -i <input.json> -o <output.xbs>
 python tools/scripts/xbs_tool.py xbs2json -i <input.xbs> -o <output.json>
@@ -94,7 +98,28 @@ python tools/scripts/xbs_tool.py roundtrip -i <input.json> -p <output_prefix>
 说明：
 - `import-fix` 用于旧源导入修复：自动补齐 `requestInfo/responseFormatType` 等导入硬字段并输出修复报告。
 - `xbs_tool.py` 在 `json2xbs/roundtrip` 会自动执行 schema 检查并在失败时中断。
+- `simulate-live` 会自动执行：`import-fix -> schema_check -> editor_check -> 四步真实请求模拟`。
+  - 四步为：`searchBook / bookDetail / chapterList / chapterContent`。
+  - 命中风控会给出 `blocked`（例如 `403/challenge`），与 parser 规则失败分开标记。
 - 仅在你明确要跳过时使用：`--skip-schema-check`。
+
+## 真实模拟测试（导入前验收）
+
+```bash
+python tools/scripts/xbs_tool.py simulate-live -i /abs/source.json --keyword 都市 --report /abs/source.sim.report.json
+```
+
+报告核心字段：
+- `schema_check`
+- `editor_check`
+- `simulation_verdict`
+- `overall_verdict`
+- `steps.searchBook/bookDetail/chapterList/chapterContent`
+
+判定规则：
+- `overall_verdict=pass`：结构、编辑兼容、四步模拟均通过，可进入导入阶段。
+- `simulation_verdict=blocked`：站点风控阻断（非 parser 规则错误），需处理请求策略或延后重试。
+- `simulation_verdict=fail`：规则解析链路失败，按步骤报告定位字段修复。
 
 ### macOS / Linux / Termux（兼容旧命令）
 
