@@ -17,11 +17,11 @@
 
 ![公众号二维码](assets/wechat-official-account-qr.jpg)
 
-- 微信群：香色闺阁自动写源群（扫码入群，二维码以最新版本为准，过期请联系更新）
+- QQ 频道：AppFlex（扫码加入频道，二维码以最新版本为准）
 
-微信群二维码：
+QQ 频道二维码：
 
-![微信群二维码](assets/wechat-group-qr.jpg)
+![AppFlex QQ 频道二维码](assets/wechat-group-qr.jpg)
 
 ## 目录说明
 
