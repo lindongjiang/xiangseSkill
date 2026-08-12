@@ -359,6 +359,36 @@ class SchemaTests(unittest.TestCase):
 
         self.assertFalse(any("responseFormatType" in error for error in errors))
 
+    def test_encode_fields_follow_lpnet_modelinfo_enums(self) -> None:
+        source = valid_source()
+        source["searchBook"]["requestParamsEncode"] = "2147485234"
+        source["searchBook"]["responseEncode"] = "2147485232"
+        errors: list[str] = []
+        warnings: list[str] = []
+
+        schema._check_one_source(
+            "Example",
+            source,
+            errors,
+            warnings,
+            strict_requestinfo=False,
+        )
+        self.assertFalse(errors)
+
+        source["searchBook"]["requestParamsEncode"] = "latin1"
+        source["searchBook"]["responseEncode"] = "utf-16"
+        errors = []
+        schema._check_one_source(
+            "Example",
+            source,
+            errors,
+            warnings,
+            strict_requestinfo=False,
+        )
+        combined = "\n".join(errors)
+        self.assertIn("requestParamsEncode", combined)
+        self.assertIn("responseEncode", combined)
+
 
 if __name__ == "__main__":
     unittest.main()

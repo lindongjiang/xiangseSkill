@@ -56,6 +56,20 @@ ALLOWED_RESPONSE_DECRYPT_TYPES = {
     "encryptType1",
 }
 
+# lpnet_modelInfo 编辑器元数据枚举（修改样本静态确认）：
+# requestParamsEncode: ""(utf-8) / 2147485234(gbk)
+# responseEncode: ""(utf-8) / 2147485232(gb2312) / 2147485234(gbk)
+ALLOWED_REQUEST_PARAMS_ENCODE = {
+    "",
+    "2147485234",
+}
+
+ALLOWED_RESPONSE_ENCODE = {
+    "",
+    "2147485232",
+    "2147485234",
+}
+
 
 def _is_int_not_bool(v: Any) -> bool:
     return isinstance(v, int) and not isinstance(v, bool)
@@ -225,6 +239,28 @@ def _check_one_source(
             elif rdt not in ALLOWED_RESPONSE_DECRYPT_TYPES:
                 errors.append(
                     f"[{name}] 动作 {action} responseDecryptType={rdt!r} 不在白名单"
+                )
+
+        if "requestParamsEncode" in obj:
+            rpe = obj.get("requestParamsEncode")
+            if not isinstance(rpe, str):
+                errors.append(
+                    f"[{name}] 动作 {action} requestParamsEncode 类型非法: {type(rpe).__name__}"
+                )
+            elif rpe not in ALLOWED_REQUEST_PARAMS_ENCODE:
+                errors.append(
+                    f"[{name}] 动作 {action} requestParamsEncode={rpe!r} 不在白名单"
+                )
+
+        if "responseEncode" in obj:
+            renc = obj.get("responseEncode")
+            if not isinstance(renc, str):
+                errors.append(
+                    f"[{name}] 动作 {action} responseEncode 类型非法: {type(renc).__name__}"
+                )
+            elif renc not in ALLOWED_RESPONSE_ENCODE:
+                errors.append(
+                    f"[{name}] 动作 {action} responseEncode={renc!r} 不在白名单"
                 )
 
         req_info = obj.get("requestInfo")

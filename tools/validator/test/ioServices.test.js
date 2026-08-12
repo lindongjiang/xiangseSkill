@@ -9,7 +9,7 @@ import {
   getFixtureContent,
   normalizeFixturesInput
 } from "../src/services/fixtureService.js";
-import { performHttpRequest } from "../src/services/httpService.js";
+import { performHttpRequest, resolveResponseEncoding } from "../src/services/httpService.js";
 
 function listen(server) {
   return new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
@@ -82,6 +82,36 @@ test("fixture service rejects a non-object JSON map file", () => {
     assert.throws(() => normalizeFixturesInput(mapFile), /must contain a JSON object/);
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("resolveResponseEncoding maps lpnet_modelInfo encode enums", () => {
+  assert.equal(resolveResponseEncoding(""), "utf-8");
+  assert.equal(resolveResponseEncoding("utf-8"), "utf-8");
+  assert.equal(resolveResponseEncoding("2147485232"), "gb2312");
+  assert.equal(resolveResponseEncoding("2147485234"), "gbk");
+  assert.equal(resolveResponseEncoding("gbk"), "gbk");
+  assert.equal(resolveResponseEncoding("unknown"), "utf-8");
+});
+
+test("HTTP service decodes GBK responses when responseEncode is set", async () => {
+  const server = http.createServer((request, response) => {
+    response.writeHead(200, { "content-type": "text/html" });
+    response.end(Buffer.from([0xc4, 0xe3, 0xba, 0xc3]), "binary");
+  });
+  await listen(server);
+
+  try {
+    const host = `http://127.0.0.1:${server.address().port}`;
+    const decoded = await performHttpRequest({
+      url: `${host}/gbk`,
+      method: "GET",
+      responseEncode: "2147485234"
+    });
+    assert.equal(decoded.body, "你好");
+    assert.equal(decoded.status, 200);
+  } finally {
+    await close(server);
   }
 });
 

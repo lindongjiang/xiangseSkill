@@ -194,11 +194,6 @@ for (const unsupportedCase of [
     capability: "parserID=JS"
   },
   {
-    name: "pagination",
-    action: { nextPageUrl: "//a/@href", moreKeys: { maxPage: 2 } },
-    capability: "pagination"
-  },
-  {
     name: "special response format",
     action: { responseFormatType: "data" },
     capability: "responseFormatType=data"
@@ -207,6 +202,14 @@ for (const unsupportedCase of [
     name: "WebView sniff",
     action: { webViewSniff: true },
     capability: "webViewSniff"
+  },
+  {
+    name: "GBK POST params",
+    action: {
+      requestParamsEncode: "2147485234",
+      requestInfo: "@js:return {'url':'https://example.com/post','POST':true,'httpParams':{'q':'x'}};"
+    },
+    capability: "requestParamsEncode=gbk(POST)"
   }
 ]) {
   test(`unsupported ${unsupportedCase.name} produces a structured error`, async () => {
@@ -244,3 +247,197 @@ for (const unsupportedCase of [
     );
   });
 }
+
+test("webViewForbidUrls is treated as a WebView signal", async () => {
+  const result = await executeStep({
+    step: "bookDetail",
+    source: {
+      Source: {
+        sourceUrl: "https://example.com",
+        bookDetail: {
+          requestInfo: "https://example.com/detail",
+          responseFormatType: "html",
+          webViewForbidUrls: ["https://example.com/ads.js"],
+          title: "//h1/text()"
+        }
+      }
+    },
+    sourceKey: "Source",
+    mode: "fixture",
+    engine: "auto",
+    queryPayload: {},
+    fixturesState: {
+      mode: "map",
+      data: { bookDetail: "<h1>Book</h1>" }
+    }
+  });
+
+  assert.equal(result.success, true);
+  assert.equal(result.requestDebug.runtimeEngine, "webview");
+  assert.ok(result.requestDebug.webviewAppliedKeys.includes("webViewForbidUrls"));
+});
+
+test("requestInfo JS may override responseFormatType for the current step", async () => {
+  const result = await executeStep({
+    step: "bookDetail",
+    source: {
+      Source: {
+        sourceUrl: "https://example.com",
+        bookDetail: {
+          requestInfo:
+            "@js:return {'url':'https://example.com/api/detail','responseFormatType':'json'};",
+          responseFormatType: "html",
+          title: "name"
+        }
+      }
+    },
+    sourceKey: "Source",
+    mode: "fixture",
+    engine: "http",
+    queryPayload: {},
+    fixturesState: {
+      mode: "map",
+      data: { bookDetail: '{"name":"Book Title"}' }
+    }
+  });
+
+  assert.equal(result.success, true);
+  assert.equal(result.parseResult.item.title, "Book Title");
+});
+
+test("fixture pagination is first-page-only and never an unsupported error", async () => {
+  const result = await executeStep({
+    step: "chapterContent",
+    source: {
+      Source: {
+        sourceUrl: "https://example.com",
+        chapterContent: {
+          requestInfo: "https://example.com/book/1/1.html",
+          responseFormatType: "html",
+          moreKeys: { maxPage: 3 },
+          nextPageUrl: "//a[@id='next']/@href",
+          title: "//h1/text()",
+          content: "//div[@id='content']/text()"
+        }
+      }
+    },
+    sourceKey: "Source",
+    mode: "fixture",
+    engine: "http",
+    queryPayload: {},
+    fixturesState: {
+      mode: "map",
+      data: { chapterContent: "<h1>C1</h1><div id='content'>Page one</div><a id='next' href='1_2.html'>next</a>" }
+    }
+  });
+
+  assert.equal(result.success, true);
+  assert.ok(
+    !result.fieldDiagnostics.some(
+      (diagnostic) =>
+        diagnostic.field === "unsupported" && diagnostic.message.includes("pagination")
+    )
+  );
+  assert.equal(result.requestDebug.pagination.enabled, true);
+  assert.equal(result.requestDebug.pagination.pagesRequested, 1);
+  assert.equal(result.requestDebug.pagination.fixtureLimited, true);
+  assert.equal(result.parseResult.item.content, "Page one");
+});
+
+test("live pagination loops nextPageUrl, merges content, and respects maxPage", async () => {
+  const pages = {
+    "https://example.com/book/1/1.html":
+      "<h1>C1</h1><div id='content'>Page one</div><a id='next' href='1_2.html'>next</a>",
+    "https://example.com/book/1/1_2.html":
+      "<h1>C1</h1><div id='content'>Page two</div><a id='next' href='1_3.html'>next</a>",
+    "https://example.com/book/1/1_3.html":
+      "<h1>C1</h1><div id='content'>Page three</div>"
+  };
+  const performHttpRequest = async (request) => {
+    const body = pages[request.url] || "<html></html>";
+    return {
+      body,
+      responseUrl: request.url,
+      status: 200,
+      headers: {},
+      blockedReason: ""
+    };
+  };
+
+  const result = await executeStep({
+    step: "chapterContent",
+    source: {
+      Source: {
+        sourceUrl: "https://example.com",
+        chapterContent: {
+          requestInfo: "https://example.com/book/1/1.html",
+          responseFormatType: "html",
+          moreKeys: { maxPage: 5 },
+          nextPageUrl: "//a[@id='next']/@href",
+          title: "//h1/text()",
+          content: "//div[@id='content']/text()"
+        }
+      }
+    },
+    sourceKey: "Source",
+    mode: "live",
+    engine: "http",
+    queryPayload: {},
+    performHttpRequest
+  });
+
+  assert.equal(result.success, true);
+  assert.equal(result.requestDebug.pagination.pagesRequested, 3);
+  assert.equal(result.requestDebug.pagination.lastNextPageUrl, "");
+  assert.equal(result.parseResult.item.title, "C1");
+  assert.equal(result.parseResult.item.content, "Page one\nPage two\nPage three");
+  assert.equal(result.requestDebug.pagination.pages.length, 3);
+});
+
+test("live pagination stops at maxPage and warns on failed later pages", async () => {
+  const pages = {
+    "https://example.com/book/1/1.html":
+      "<h1>C1</h1><div id='content'>Page one</div><a id='next' href='1_2.html'>next</a>",
+    "https://example.com/book/1/1_2.html":
+      "<h1>C1</h1><div id='content'>Page two</div><a id='next' href='1_3.html'>next</a>"
+  };
+  const performHttpRequest = async (request) => {
+    if (request.url === "https://example.com/book/1/1_3.html") {
+      return { body: "", responseUrl: request.url, status: 403, headers: {}, blockedReason: "HTTP 403 forbidden" };
+    }
+    const body = pages[request.url] || "<html></html>";
+    return { body, responseUrl: request.url, status: 200, headers: {}, blockedReason: "" };
+  };
+
+  const result = await executeStep({
+    step: "chapterContent",
+    source: {
+      Source: {
+        sourceUrl: "https://example.com",
+        chapterContent: {
+          requestInfo: "https://example.com/book/1/1.html",
+          responseFormatType: "html",
+          moreKeys: { maxPage: 3 },
+          nextPageUrl: "//a[@id='next']/@href",
+          title: "//h1/text()",
+          content: "//div[@id='content']/text()"
+        }
+      }
+    },
+    sourceKey: "Source",
+    mode: "live",
+    engine: "http",
+    queryPayload: {},
+    performHttpRequest
+  });
+
+  assert.equal(result.success, true);
+  assert.equal(result.requestDebug.pagination.pagesRequested, 2);
+  assert.ok(
+    result.fieldDiagnostics.some(
+      (diagnostic) =>
+        diagnostic.field === "pagination" && diagnostic.level === "warning"
+    )
+  );
+  assert.equal(result.parseResult.item.content, "Page one\nPage two");
+});

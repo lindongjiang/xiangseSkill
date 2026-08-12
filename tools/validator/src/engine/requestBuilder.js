@@ -33,6 +33,22 @@ function extractWebViewOptions(obj) {
   if (Object.prototype.hasOwnProperty.call(obj, "webViewSkipUrlsUnless")) out.webViewSkipUrlsUnless = normalizeArray(obj.webViewSkipUrlsUnless);
   if (Object.prototype.hasOwnProperty.call(obj, "webViewContentRules")) out.webViewContentRules = obj.webViewContentRules;
   if (Object.prototype.hasOwnProperty.call(obj, "webViewSniff")) out.webViewSniff = obj.webViewSniff;
+  if (Object.prototype.hasOwnProperty.call(obj, "webViewForbidUrls")) out.webViewForbidUrls = normalizeArray(obj.webViewForbidUrls);
+  return out;
+}
+
+function extractResponseConfig(obj) {
+  if (!obj || typeof obj !== "object") return {};
+  const out = {};
+  if (Object.prototype.hasOwnProperty.call(obj, "responseEncode")) {
+    out.responseEncode = String(obj.responseEncode || "");
+  }
+  if (Object.prototype.hasOwnProperty.call(obj, "requestParamsEncode")) {
+    out.requestParamsEncode = String(obj.requestParamsEncode || "");
+  }
+  if (Object.prototype.hasOwnProperty.call(obj, "responseFormatType")) {
+    out.responseFormatType = String(obj.responseFormatType || "");
+  }
   return out;
 }
 
@@ -48,6 +64,7 @@ export async function buildRequest(input) {
     ...(actionConfig?.httpHeaders || {})
   };
   const actionWebViewOptions = extractWebViewOptions(actionConfig);
+  const actionResponseConfig = extractResponseConfig(actionConfig);
 
   const requestInfo = actionConfig?.requestInfo;
   if (!requestInfo) {
@@ -74,12 +91,14 @@ export async function buildRequest(input) {
           url: resolveWithHost(host, jsResult),
           method: "GET",
           httpHeaders: baseHeaders,
+          ...actionResponseConfig,
           ...actionWebViewOptions
         };
       }
 
       const jsUrl = String(jsResult?.url || "").trim();
       const jsWebViewOptions = extractWebViewOptions(jsResult);
+      const jsResponseConfig = extractResponseConfig(jsResult);
       return {
         url: resolveWithHost(host, jsUrl),
         method: jsResult?.POST ? "POST" : "GET",
@@ -88,7 +107,8 @@ export async function buildRequest(input) {
           ...baseHeaders,
           ...(jsResult?.httpHeaders || {})
         },
-        ...mergeWebViewOptions(actionWebViewOptions, jsWebViewOptions)
+        ...mergeWebViewOptions(actionWebViewOptions, jsWebViewOptions),
+        ...mergeWebViewOptions(actionResponseConfig, jsResponseConfig)
       };
     }
 
@@ -104,12 +124,14 @@ export async function buildRequest(input) {
       url: resolveWithHost(host, templated),
       method: "GET",
       httpHeaders: baseHeaders,
+      ...actionResponseConfig,
       ...actionWebViewOptions
     };
   }
 
   if (typeof requestInfo === "object") {
     const reqWebViewOptions = extractWebViewOptions(requestInfo);
+    const reqResponseConfig = extractResponseConfig(requestInfo);
     return {
       url: resolveWithHost(host, String(requestInfo?.url || "")),
       method: requestInfo?.POST ? "POST" : "GET",
@@ -118,7 +140,8 @@ export async function buildRequest(input) {
         ...baseHeaders,
         ...(requestInfo?.httpHeaders || {})
       },
-      ...mergeWebViewOptions(actionWebViewOptions, reqWebViewOptions)
+      ...mergeWebViewOptions(actionWebViewOptions, reqWebViewOptions),
+      ...mergeWebViewOptions(actionResponseConfig, reqResponseConfig)
     };
   }
 

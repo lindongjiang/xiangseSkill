@@ -16,6 +16,27 @@ function headerGet(headers, key) {
   return "";
 }
 
+const ENCODING_MAP = {
+  "": "utf-8",
+  "utf-8": "utf-8",
+  "utf8": "utf-8",
+  "2147485232": "gb2312",
+  "gb2312": "gb2312",
+  "2147485234": "gbk",
+  "gbk": "gbk"
+};
+
+export function resolveResponseEncoding(value) {
+  const v = String(value || "").trim().toLowerCase();
+  return ENCODING_MAP[v] || "utf-8";
+}
+
+function decodeResponseData(data, encoding) {
+  if (typeof data === "string") return data;
+  const bytes = data instanceof Uint8Array ? data : new Uint8Array(data || []);
+  return new TextDecoder(encoding || "utf-8").decode(bytes);
+}
+
 function detectBlocked(status, body, headers) {
   const bodyText = toText(body);
   const cfMitigated = toText(headerGet(headers, "cf-mitigated"));
@@ -49,6 +70,9 @@ function detectBlocked(status, body, headers) {
 
 export async function performHttpRequest(request) {
   const headers = request?.httpHeaders || {};
+  const encoding = resolveResponseEncoding(request?.responseEncode);
+  const needsBinaryResponse = encoding !== "utf-8";
+  const responseType = needsBinaryResponse ? "arraybuffer" : "text";
   let response;
 
   if (request?.method === "POST") {
@@ -63,7 +87,7 @@ export async function performHttpRequest(request) {
         ...headers
       },
       timeout: appConfig.httpTimeoutMs,
-      responseType: "text",
+      responseType,
       validateStatus: () => true
     });
   } else {
@@ -71,12 +95,12 @@ export async function performHttpRequest(request) {
       params: request?.httpParams || {},
       headers,
       timeout: appConfig.httpTimeoutMs,
-      responseType: "text",
+      responseType,
       validateStatus: () => true
     });
   }
 
-  const body = typeof response.data === "string" ? response.data : JSON.stringify(response.data);
+  const body = decodeResponseData(response.data, encoding);
   const blockedReason = detectBlocked(response.status, body, response.headers || {});
 
   return {

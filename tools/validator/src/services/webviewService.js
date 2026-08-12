@@ -129,7 +129,9 @@ async function performFallbackWebView(request, timeoutMs) {
 }
 
 function shouldSkipUrl(url, request) {
-  const skip = toStringArray(request?.webViewSkipUrls);
+  const skip = toStringArray(request?.webViewSkipUrls).concat(
+    toStringArray(request?.webViewForbidUrls)
+  );
   const unless = toStringArray(request?.webViewSkipUrlsUnless);
   const text = String(url || "");
   if (unless.some((x) => text.includes(x))) return false;
@@ -173,7 +175,7 @@ async function performPlaywrightWebView(request, timeoutMs) {
       }
     });
 
-    if (request?.webViewSkipUrls || request?.webViewSkipUrlsUnless) {
+    if (request?.webViewSkipUrls || request?.webViewSkipUrlsUnless || request?.webViewForbidUrls) {
       await page.route("**/*", async (route) => {
         const url = route.request().url();
         if (shouldSkipUrl(url, request)) {
