@@ -36,6 +36,16 @@ For a new source, require:
 - real search, detail, catalog, and content URLs, or saved responses for those four distinct pages;
 - the target official app version and how it will be verified.
 
+**Pre-check reachability before doing any work.** Some sites are IP- or region-blocked for the current network (observed 2026-08: rrssk.com served a rewritten homepage for all detail paths; zjrtqs.com and xbfdc.net returned 403 for every path, UA, browser, and proxy). Run:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" --max-time 15 -A "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)" "https://site.example/"
+curl -s -o /dev/null -w "%{http_code}\n" --max-time 15 "https://site.example/robots.txt"
+```
+
+- 403 for every path (even `robots.txt`) across curl, real browser, and proxy means site-level blocking: report `blocked` and ask the user for saved samples from an accessible network.
+- A homepage that loads but rewrites every detail URL to the homepage is also `blocked` for delivery; do not build an unverifiable source on it.
+
 For `.xbs` input, decode and normalize before editing:
 
 ```bash
@@ -127,7 +137,7 @@ python3 tools/scripts/xbs_tool.py simulate-live \
 Require `schema_check=PASS`, no blocking editor risk, `simulation_verdict.status=pass`, `overall_verdict.status=pass`, and successful `searchBook`, `bookDetail`, `chapterList`, and `chapterContent` steps.
 
 Treat `blocked` as blocked, not pass. Treat WebView fallback or unsupported sniff/decryption behavior as incomplete evidence.
-The current validator executes only `parserID: DOM` with `responseFormatType: html|json`. It reports JS parsers/hooks, pagination (`nextPageUrl` or `maxPage > 1`), other response formats, `webViewSniff`, and `webViewContentRules` as unsupported errors. It also blocks HTTP/JSDOM fallback when a requested Playwright WebView runtime is unavailable. These are automation capability gaps, not proof that the official App rejects the source; record the automated gate as incomplete/blocked and do not package it as a live pass.
+The current validator executes only `parserID: DOM` with `responseFormatType: html|json`. It reports JS parsers/hooks, other response formats, `webViewSniff`, `webViewContentRules`, and GBK POST parameter encoding as unsupported errors. Pagination via `nextPageUrl` is automated (page loop capped by `moreKeys.maxPage`; merged list/content in `requestDebug.pagination`). It also blocks HTTP/JSDOM fallback when a requested Playwright WebView runtime is unavailable. These are automation capability gaps, not proof that the official App rejects the source; record the automated gate as incomplete/blocked and do not package it as a live pass.
 
 ### 7. Package only after live success
 

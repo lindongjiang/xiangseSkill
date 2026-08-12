@@ -32,6 +32,7 @@
 | WV-008 | `requestInfo` | 与 `parserID/responseFormatType` 同时出现，符合“请求构建 -> 解析”统一动作模型。 |
 | WV-009 | `WKWebView` 相关字符串 | 存在 WebView 回调与导航上下文，WebView 非边缘功能。 |
 | WV-010 | `params.requestUrls` / `params.responseUrl` | 日志/调试字符串存在，WebView 导航会累积 `requestUrls`，`responseUrl` 取最后一次响应对应 URL。 |
+| WV-011 | `webViewForbidUrls` | 存在；配套符号 `LPNetWork_ForbidUrls` 与资源 `dir_res/plist_webviewforbidurls.plist`。语义为 WebView 导航禁止加载的 URL 列表（黑名单，与 `webViewSkipUrls` 同类）。2026-08-11 复扫新增，模拟器已并入 skip 过滤。 |
 
 ---
 
@@ -49,8 +50,9 @@
    - `webViewJs`：在页面可执行后注入。
    - `webViewJsDelay`：注入前等待（秒）。
    - `webViewSkipUrls`：导航请求 URL 过滤规则（黑名单）。
-   - `webViewSkipUrlsUnless`：白名单覆盖；命中时即使匹配 skip 规则也继续加载。
-   - `webViewSniff`：启用嗅探模式（仅在高可信场景使用；默认优先 API/HTTP）。
+    - `webViewSkipUrlsUnless`：白名单覆盖；命中时即使匹配 skip 规则也继续加载。
+    - `webViewForbidUrls`：禁止加载的 URL 列表；模拟器将其并入 skip 过滤（`shouldSkipUrl` 合并 `webViewSkipUrls` 与 `webViewForbidUrls`）。
+    - `webViewSniff`：启用嗅探模式（仅在高可信场景使用；默认优先 API/HTTP）。
    - `wkwebview_post(path, charset, params)`：WebView 内表单 POST 辅助，适合挑战页/登录页二次提交。
 
 3. 结构化报告新增：

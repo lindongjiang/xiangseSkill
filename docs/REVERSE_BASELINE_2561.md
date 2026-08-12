@@ -227,6 +227,128 @@ python3 tools/scripts/decode_xbs.py Tg@TrollstoreKios.app/lpnet_modelInfo
 | `loginUrl` / `loginWebView` | 登录动作链路存在 | 仅登录型站点按需配置 |
 | `miniAppVersion` | 顶层可选字段（历史源常见） | 交付可不写；写了也不阻断 |
 
+## 9. 2026-08-11 复扫增量（`lpnet_modelInfo` 字段白名单 + 官方导出样本）
+
+### 9.1 编辑器动作面板字段白名单（`Tg@TrollstoreKios.app/lpnet_modelInfo`）
+
+`lpnet_modelInfo` 是编辑器"动作面板"的字段元数据（XBS，`decode_xbs.py` 可解包），即官方 UI 暴露的可配置动作字段全集：
+
+- `requestJavascript`（获取请求信息的js代码）——UI 形式；保存产物即 `requestInfo`
+- `responseJavascript`（解析响应的js代码）
+- `requestFunction` / `responseFunction`（对应 JS parser 方法名）
+- `requestParamsEncode`（""=utf-8 / `2147485234`=gbk）
+- `responseEncode`（""=utf-8 / `2147485232`=gb2312 / `2147485234`=gbk）
+- `responseFormatType`（""/`base64str`/`html`/`xml`/`json`/`data`）
+- `responseDecryptType`（""/`encryptType1`）
+- `moreKeys`（NSDictionary）
+- `actionID`（`kv_editable: false`，不可编辑）
+- `testConfig` / `testRegex`（UI 测试工具字段，交付可省略）
+
+### 9.2 编码字段枚举（静态确认）
+
+- `requestParamsEncode`：`""(utf-8)`、`2147485234(gbk)`
+- `responseEncode`：`""(utf-8)`、`2147485232(gb2312)`、`2147485234(gbk)`
+
+`check_xiangse_schema.py` 已按此白名单校验；`tools/validator` 已支持 `responseEncode` 的 gbk/gb2312 响应解码（TextDecoder，零依赖），`requestParamsEncode=gbk` 的 POST 参数编码尚未支持并输出结构化 unsupported。
+
+### 9.3 官方导出样本证据（`tools/verification/mac_live_sourceModelList.json`）
+
+App 实际导出的 6 份书源（精华书阁/80zw小说/酷读一世/百度小说/ttks.tw/雪飞阁）确认：
+
+- `bookWorld.*.moreKeys.requestFilters` 全部为字符串 legacy 形式（`key\n标题::值\n...`），非数组
+- 动作级 `host` 字段普遍存在（`config.host` 的来源）
+- `params` 运行时成员包含：`keyWord/pageIndex/filters.<key>/queryInfo/responseUrl/lastResponse/requestInfo`
+- `requestInfo` JS 返回对象可含 `responseFormatType` 覆盖键（百度小说：`return {url:result,responseFormatType:'data'}`）
+- `bookWorld` 子项可含 `_sIndex` 排序索引
+- `weight` 多态：官方样本中字符串为主（`"109"`/`"666"`/`"9999"`/`"1573"`），亦有数字（精华书阁 `100`）——skill 保持字符串硬约束为编辑保存安全选择（见 `RETROSPECT_LOG` 2026-03-10 事故）
+
+### 9.4 JS 运行时签名（主二进制字符串）
+
+- `function functionName(config, params, result){` — `@js:` 规则被包装执行的函数签名，与契约一致
+- `function buildRegex(strSource, strRegex)` — 内置正则工具
+- `%@wkwebview_post("%@", "%@", %@)` 完整函数源码位于主二进制字符串
+- `sourceTypeByEmoji:` / `sourceTypeBySourceName:` — 源类型推导辅助
+
+### 9.5 复现命令
+
+```bash
+python3 tools/scripts/decode_xbs.py "Tg@TrollstoreKios.app/lpnet_modelInfo"
+strings "Tg@TrollstoreKios.app/Tg@TrollstoreKios" | rg "functionName\(config|bookWorldTemplate|webViewForbidUrls|parserParams"
+```
+
+## 10. 2026-08-11 复扫增量（ObjC 类方法全集 + 官方导出样本统计）
+
+### 10.1 LCJSTool 完整 API（`LCJSToolExports` JSExport 协议，修改样本静态确认）
+
+`LCJSTool` 通过 `LCJSToolExports`（JSExport）暴露给 JS 运行时，调用名去掉冒号转驼峰。官方导出样本（百度小说）中的调用形式为 `params.nativeTool.<method>`：
+
+- `log:` / `log:withKey:` — 日志
+- `stringByObject:` — 对象转字符串
+- `deviceId` / `deviceIdWithTemplate:withSeparator:`
+- `base64Encode:` / `base64EncodeWithData:` / `base64Decode:`
+- `sha1Encode:` / `md5Encode:`
+- `cookieByKey:` / `cookiesByUrl:`
+- `getCache:` / `set:cache:`
+- `readFile:` / `readTxtFile:` / `allFilesAtPath:`
+- `unzipFile:` / `unzipFile:withPassword:`
+- `dataByAesDecryptWithData:withKey:withIv:` / `dataByAesDecryptWithBase64Data:withKey:withIv:` / `dataByAesDecryptWithBase64String:withKey:withIv:`
+- `XPathParserWithSource:`
+
+注意：这些方法存在并 JSExport 于修改样本；官方未修改 App 的 JS 上下文是否暴露 `params.nativeTool` 仍需官方 App 运行验证（保持 fail-closed）。
+
+### 10.2 DomModelParser 解析链路（静态确认）
+
+- `getRequestInfoForConfig:parserParams:error:` — requestInfo 求值（占位符替换 + `@js:` 执行）
+- `getResponseInfoForResponse:config:userInfo:error:` — 响应转换（解密/编码后对象）
+- `parse1:config:userInfo:` / `parse2:config:userInfo:dontRmHtmlKeys:` — 两阶段解析（parse2 剥离 HTML）
+- `parseNormalNode:config:userInfo:dontRmHtmlKeys:` — 列表项解析
+- `valueForNode:config:rule:ruleKey:userInfo:removeHtml:` — 单字段求值（rule=表达式、ruleKey=字段名）
+- `valueForNode:jsonPath:` — JSONPath 求值（SMJJSONPath 库，前缀 `$`，`smjJsonPathPrefix`）
+- `divisionRule:withSplit:` — 分割规则求值（未在交付样本中确认字段名，待动态验证）
+- `dicNormalRuleKey` / `dicCheckConfigValidKey` / `dicUpgradeKey211031`（2021-10-31 旧模型升级映射）
+
+### 10.3 BookQueryManager / LPNetWork1 / LPNetWork2 请求链（静态确认）
+
+- `queryByActionID:book:queryInfo:sourceName:userInfo:target:notify:cachePolicy:` — 统一查询入口（book=胖书对象、queryInfo=上一步选中项）
+- `queryCatalogByBook:sourceName:...:` / `queryCpFileByBook:cpInfo:cpIndex:...:` — 目录/漫画章节专项
+- `getDefaultHttpHeaders` / `useHttpHeader` / `dicCacheTime` / `getCacheTime:`
+- `getCacheKeyByConfig:requestInfo:` — 请求缓存键
+- `getCustomFormatHttpParams:paramsEncode:post:` — 请求参数编码实现点（requestParamsEncode 的 gbk 路径在此）
+- `getFullUrlByHost:url:` — 相对 URL 拼接（与 validator `resolveWithHost` 同语义）
+- `removeHtml:fromKey:userInfo:` / `removeHtml:regex:cacheRegex:` / `defRemoveHtmlRegex` — 字段 HTML 清洗（对应 `moreKeys.removeHtmlKeys`）
+- `formatCallBackResponse:config:userInfo:` / `checkParserResponse:` — 响应格式化与校验
+
+### 10.4 BookSourceModelManager 模板字典（静态确认，值待动态）
+
+- `dicBaseModelTemplateDom` / `dicBaseModelTemplateJS` — 新建书源基础模板（DOM/JS 两套）
+- `dicBookWorldTemplateDom` / `dicBookWorldTemplateJS` — 分类模板
+- `dicShudanListTemplateDom` / `dicShudanListTemplateJS` — 书单模板
+- `dicDomModelKeyInfo` / `dicDomModelEditableKeys:` — DOM 字段元数据/可编辑键
+- `dicSourceModelKeyInfo` / `dicSourceModelEditableKeys` / `dicSourceModelSyncConfig` — 源级字段元数据
+- 字典值不可静态读取，需 Frida 动态 dump（`tools/scripts/frida_dommodel_trace.js` 已就绪）
+
+### 10.5 官方导出样本统计结论（`tools/verification/mac_live_sourceModelList.json`，6 源）
+
+- 动作级字段频次：`actionID/parserID` 34/34（必含）；`responseFormatType` 23、`validConfig` 21、`requestInfo` 20、`host` 17、`httpHeaders` 13、`list` 12；解析字段：`detailUrl/title/cover/url/desc/nextPageUrl/content/cat/author/bookName/lastChapterTitle/status`
+- **`sourceType` 缺失合法**：百度小说无 `sourceType`（App 默认按 text）。契约仍要求显式 `sourceType=text`（fail-closed 交付原则）
+- **空动作合法**：`shudanList: {}`（完全空）、`shupingList/relatedWord/searchShudan/shudanDetail/shupingHome` 为 `{actionID, parserID}` 空壳（百度小说/雪飞阁）
+- **`lastModifyTime` 支持浮点字符串**：官方 3/6 为 `"1773148185.456299"` 形式
+- **`weight` 多态复核**：str 5/6、int 1/6（精华书阁 `100`）；契约字符串硬约束为编辑保存安全选择（见 2026-03-10 事故）
+- **`enable`**：官方全部 int 0/1 ✓
+- **`miniAppVersion`**：官方 6/6 均带（如 `"2.53.2"`，历史版本源在 2.56.1 兼容）
+- 特殊动作（书评/书单/相关词/热搜）仅在需要时配置，可省略
+
+### 10.6 剩余知识缺口（必须动态验证）
+
+| 缺口 | 方法 |
+|---|---|
+| `dicDomModelKeyInfo`/模板字典值 | Frida dump `BookSourceModelManager` 实例属性 |
+| `encryptType1` 具体算法参数（AES 模式/填充） | Frida 观测 `dataByAesDecryptWith...` 入参 |
+| gbk 参数编码实现细节 | 反汇编 `getCustomFormatHttpParams:paramsEncode:post:` |
+| 缓存键格式 | 反汇编/动态观测 `getCacheKeyByConfig:requestInfo:` |
+| `divisionRule` 字段名与格式 | 官方 App 编辑面板实测 |
+| `params.nativeTool` 官方可用性 | 官方 App JS 上下文实测 |
+
 ### 8.2 解析类与调用链（静态符号）
 
 - `DomModelParser`

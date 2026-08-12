@@ -1,5 +1,54 @@
 # Changelog
 
+## 2026-08-12（九五小说 95txt 书源）
+- 新书源：`九五小说`（https://www.95txt.com/，全本站）：
+  - 站方**已关闭搜索**（/search/ 返回"管理员已关闭此功能"），searchBook 降级为都市分类浏览（/fenlei/5/1/，list=`div.item`）
+  - 详情 `/xs/{id}/`：og:novel meta 全字段 + **内联目录**（`ul.section-list>li>a`，大书目录分页 `/xs/{id}/{page}/`，live 验证合并 204 章）
+  - 正文 `/xs/{id}/{cid}.html`：`div#content` 容器，同章分页 `_2` 后缀（`下一页` 链接 + 同书守卫）
+  - bookWorld 19 个分类（玄幻/奇幻/武侠/仙侠/都市/军事/历史/游戏/竞技/科幻/悬疑/灵异/其他/古代/现代/浪漫/BL/GL/二次元），requestInfo 用 params.filter 优先（沿用 wcshuba 实证规则）
+  - **PIPELINE_STATUS: pass**（schema/editor/fixture/live 全过；live：搜索 12 本、详情字段齐、目录 204 章、正文 7660 字符；roundtrip 零差异）
+  - XBS SHA-256：`6a3a450d6db0cbb9050b5cf8b06f583c23aeafbb761376e1870f25aa4140ab49`
+  - 交付证据：`95txt_source.pipeline/fixture/live.simulate.json`、`samples/95txt/`
+  - 待办：官方 App 验收（Gate 5）
+
+## 2026-08-12（分页链）
+## 2026-08-11（無錯書吧 wcshuba 书源）
+- 新书源：`無錯書吧`（https://www.wcshuba.com/，繁体站）：
+  - 四步链：搜索 `/search/?searchkey=`（`div.rank>div.content>dl` 卡）、详情 `/book/{id}.html`（og:novel meta 全字段）、目录 `/chapterlist/{id}.html`（每页 200 章，`rel='chapter'` 链接 + `index-next-top` 分页）、正文 `/read/{id}/{cid}.html`（`#booktxt` 容器，`rel='next'` 同书守卫分页）
+  - `tools/verification/wcshuba_source.json` + `samples/wcshuba/`（keyword=腐朽世界）
+  - **PIPELINE_STATUS: pass**（schema/editor/fixture/live 全过；live 目录分页合并 664 章；正文长文解析正常；roundtrip 零差异）
+  - XBS SHA-256：`625edcaf268659917a7bad671051c8f38656158af36ec731d52d7a839ffb3c1f`（`tools/verification/out/wcshuba_source.xbs`）
+  - 交付证据：`wcshuba_source.pipeline/fixture/live.simulate.json`
+  - 待办：官方 App 验收（Gate 5）后标记最终 pass
+
+## 2026-08-11（分页链）
+- 验证器实现分页链支持（`tools/validator`）：
+  - 移除 `nextPageUrl`/`maxPage>1` 的 unsupported 诊断
+  - `stepExecutor.js` 重构：抽出 `fetchStepPage`/`parseResponsePage`，实现 nextPageUrl 循环（上限 `moreKeys.maxPage`，默认 10）、list 合并/正文拼接、`requestDebug.pagination` 链式报告（pages/pagesRequested/maxPages/fixtureLimited）
+  - 分页 URL 基于当前页 `responseUrl` 解析（浏览器语义）；后续页失败降级为 warning 不阻断
+  - fixture 模式仅回放第一页（`pagination.fixtureLimited=true`）
+  - webview 运行时跳过分页并告警（首页已验证）
+  - 新增 3 个分页测试（fixture 单页/三页合并/maxPage 与失败页），共 32 用例全绿；覆盖率 85.97%
+- 验证结论更新：`novel543`（稷下书院）fixture + live 四步链全 pass，`PIPELINE_STATUS: pass`，XBS SHA-256 `9e9232fa...`，roundtrip 语义零差异——首个通过分页链的已交付源；`cuoceng` fixture 全 pass（目录 500 章）
+- 同步仓库报告：`novel543_source.pipeline.json`、`novel543_source.fixture.simulate.json`、`novel543_source.live.simulate.json`、`out/novel543_source.xbs`
+- 文档同步：SKILL Gate 3 与 verification-and-delivery Gate 3 移除 pagination unsupported，改为分页自动化说明
+
+## 2026-08-11
+- 深度复扫 `Tg@TrollstoreKios.app` 与 `SourceRead.app`（旧版 9.9.9，确认其规则引擎与 2.56.1 不同，学习价值集中在 2.56.1）：
+  - `lpnet_modelInfo` 编辑器动作面板字段白名单：`requestJavascript/responseJavascript/requestFunction/responseFunction/requestParamsEncode/responseEncode/responseFormatType/responseDecryptType/moreKeys/testConfig/testRegex`（`requestInfo` 为 `requestJavascript` 的保存产物）
+  - 新确认字段：`requestParamsEncode`（""/2147485234=gbk）、`responseEncode`（""/2147485232=gb2312/2147485234=gbk）、`webViewForbidUrls`（配套 `LPNetWork_ForbidUrls`、`dir_res/plist_webviewforbidurls.plist`）
+  - JS 运行时签名 `function functionName(config, params, result)`、内置 `buildRegex`、`params` 运行时成员清单（keyWord/pageIndex/filters/queryInfo/responseUrl/lastResponse/requestInfo/requestUrls）
+  - 官方导出样本（`mac_live_sourceModelList.json`）确认 `requestFilters` 字符串 legacy 形式为唯一官方形态；`requestInfo` 返回对象可覆盖 `responseFormatType`
+- 验证器增强（`tools/validator`）：
+  - `httpService.js` 支持 `responseEncode` 的 gbk/gb2312 响应解码（TextDecoder，零依赖）
+  - `requestBuilder.js` 透传 `responseEncode/requestParamsEncode/responseFormatType`（含 requestInfo JS 返回对象覆盖）与 `webViewForbidUrls`
+  - `stepExecutor.js`：`webViewForbidUrls` 作为 WebView 信号键；`requestParamsEncode=gbk(POST)` 输出结构化 unsupported
+  - `webviewService.js`：`webViewForbidUrls` 并入 skip 过滤
+  - 新增 5 个测试（GBK 解码/编码枚举/管道/WebView 信号/responseFormatType 覆盖），共 30 用例全绿
+- schema 增强（`check_xiangse_schema.py`）：新增 `requestParamsEncode/responseEncode` 枚举白名单校验；新增 1 个测试，共 39 用例全绿
+- 修复交付样本：`novel543_source.json`、`cuoceng_source.json` 的数组型 `requestFilters` 归一化为字符串 legacy 形式（通过 schema 与 editor 检查）
+- 文档同步：契约新增编码字段/`||` 管道语法/`params` 成员/`host` 字段；WebView 基线补 `webViewForbidUrls`；逆向基线新增第 9 节（lpnet_modelInfo 白名单 + 官方导出样本证据）
+
 ## 2026-07-05
 - 基于仓库内置 `Tg@TrollstoreKios.app`（StandarReader 2.56.1）复扫 IPA，完善 skill 逆向基线。
 - 新增 `tools/scripts/decode_xbs.py`（Go 不可用时的 XBS 解包回退）。

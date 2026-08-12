@@ -59,11 +59,12 @@ Require all of the following:
 - every propagated URL is one valid URL for the next semantic step
 
 `403`, `429`, challenge, login, or missing WebView capability is `blocked`, never `pass`.
+Pagination via `nextPageUrl` is automated: the validator loops follow-up pages (capped by `moreKeys.maxPage`, default 10), merges list items or concatenates chapter content, and reports the chain in `requestDebug.pagination`; a failing later page becomes a warning, never a pass claim. In fixture mode only the first page is replayed (`pagination.fixtureLimited=true`), so pagination correctness still needs the live chain and the official app.
 The current validator executes `parserID: DOM` with `responseFormatType: html|json`. It emits structured unsupported errors for:
 
 - `parserID: JS`;
 - `responseFormatType` values other than `html` and `json`;
-- pagination via `nextPageUrl` or `moreKeys.maxPage > 1`;
+- `requestParamsEncode=gbk` on a POST request;
 - `webViewSniff` and `webViewContentRules`;
 - `JSParser`, `requestJavascript`, `responseJavascript`, `requestFunction`, and `responseFunction`.
 
@@ -97,6 +98,14 @@ Document:
 - pre-import `sourceModelList.xbs` path, backup path, and matching SHA-256.
 
 Quit the App before touching its source list. Import and prune helpers require a new backup path and refuse to overwrite an existing backup; `IMPORT_REQUESTED` is a handoff result, not confirmation that the user accepted the App dialog.
+
+**Direct file surgery safety (learned 2026-08-12):** when writing into `sourceModelList.xbs` directly (PlayCover or iOS-on-Mac containers), the app rewrites the file asynchronously — killing the process mid-write truncates it to zero bytes. Always:
+
+1. confirm the app process is fully exited before editing;
+2. keep `sourceModelList.xbs.backup-<date>` (never overwrite) and verify the live file decodes before and after every write;
+3. after launch, verify the file still decodes and the injected source survived the app's own read-back write.
+
+A source injected via file surgery that survives an app relaunch and still carries its `bookWorld` categories is validated app-side; an import dialog `open` alone is not.
 
 Verify manually in that official app:
 
