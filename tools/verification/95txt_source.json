@@ -1,0 +1,479 @@
+{
+  "九五小说-v0812": {
+    "sourceName": "九五小说",
+    "sourceUrl": "https://www.95txt.com/",
+    "sourceType": "text",
+    "enable": 1,
+    "weight": "9999",
+    "desc": "DOM 书源；站方已关闭搜索功能，searchBook 降级为都市分类浏览；详情页内联目录，支持目录分页与同章分页",
+    "miniAppVersion": "2.53.2",
+    "lastModifyTime": "1783350000",
+    "httpHeaders": {
+      "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language": "zh-CN,zh;q=0.9"
+    },
+    "searchBook": {
+      "actionID": "searchBook",
+      "parserID": "DOM",
+      "validConfig": "",
+      "host": "https://www.95txt.com",
+      "responseFormatType": "html",
+      "requestInfo": "@js:return {'url': config.host + '/fenlei/5/1/', 'httpHeaders': config.httpHeaders};",
+      "list": "//div[contains(@class,'item')]",
+      "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+      "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+      "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+      "nextPageUrl": "//a[contains(@href,'/fenlei/5/') and not(contains(@href,'/fenlei/5/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;"
+    },
+    "bookDetail": {
+      "actionID": "bookDetail",
+      "parserID": "DOM",
+      "validConfig": "",
+      "host": "https://www.95txt.com",
+      "responseFormatType": "html",
+      "requestInfo": "@js:\nvar u = '';\nif (params && params.queryInfo) u = params.queryInfo.detailUrl || params.queryInfo.url || '';\nif (!u && typeof result === 'string') u = result;\nif (!u && result && result.detailUrl) u = result.detailUrl;\nif (!u && result && result.url) u = result.url;\nif (!u && params && params.responseUrl) u = params.responseUrl;\nu = String(u).trim().split(/\\s+/)[0] || '';\nif (u && u.indexOf('http') !== 0) u = config.host + u;\nreturn {'url': u, 'httpHeaders': config.httpHeaders};",
+      "detailUrl": "@js:\nif (params && params.queryInfo) {\n  if (params.queryInfo.detailUrl) return params.queryInfo.detailUrl;\n  if (params.queryInfo.url) return params.queryInfo.url;\n}\nif (typeof result === 'string') return result;\nif (result && result.detailUrl) return result.detailUrl;\nif (result && result.url) return result.url;\nreturn '';",
+      "bookName": "//meta[@property='og:novel:book_name']/@content||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "author": "//meta[@property='og:novel:author']/@content||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "cover": "//meta[@property='og:image']/@content",
+      "cat": "//meta[@property='og:novel:category']/@content||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "status": "//meta[@property='og:novel:status']/@content||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "desc": "//meta[@property='og:description']/@content||@js:\nvar t = String(result || '').replace(/\\s+/g, ' ').trim();\nt = t.replace(/^.*?简介[：:]/, '').replace(/^.*?簡介[：:]/, '');\nreturn t;",
+      "lastChapterTitle": "//meta[@property='og:novel:lastest_chapter_name']/@content||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "updateTime": "//meta[@property='og:novel:update_time']/@content||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "url": "@js:\nif (params && params.queryInfo) {\n  if (params.queryInfo.detailUrl) return params.queryInfo.detailUrl;\n  if (params.queryInfo.url) return params.queryInfo.url;\n}\nif (typeof result === 'string') return result;\nif (result && result.detailUrl) return result.detailUrl;\nif (result && result.url) return result.url;\nreturn '';"
+    },
+    "chapterList": {
+      "actionID": "chapterList",
+      "parserID": "DOM",
+      "validConfig": "",
+      "host": "https://www.95txt.com",
+      "responseFormatType": "html",
+      "requestInfo": "@js:\nvar host = String(config.host || 'https://www.95txt.com');\nvar u = '';\nif (params && params.queryInfo) u = params.queryInfo.url || params.queryInfo.detailUrl || '';\nif (!u && typeof result === 'string') u = result;\nif (!u && result && result.url) u = result.url;\nif (!u && result && result.detailUrl) u = result.detailUrl;\nif (!u && params && params.responseUrl) u = params.responseUrl;\nu = String(u).trim().split(/\\s+/)[0] || '';\nvar m = u.match(/\\/xs\\/(\\d+)\\//);\nif (m) u = host + '/xs/' + m[1] + '/';\nelse if (u && u.indexOf('http') !== 0) u = host + u;\nreturn {'url': u, 'httpHeaders': config.httpHeaders};",
+      "list": "//ul[contains(@class,'section-list')]/li/a",
+      "title": "//text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "url": "//@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+      "detailUrl": "//@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+      "moreKeys": {
+        "maxPage": 8
+      },
+      "nextPageUrl": "//a[contains(@href,'/xs/') and contains(@href,'/2/')][1]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/xs\\/(\\d+)\\/(\\d+)?\\/?$/);\nvar nm = nxt.match(/\\/xs\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (!np || np <= cp) return '';\nreturn nxt;"
+    },
+    "chapterContent": {
+      "actionID": "chapterContent",
+      "parserID": "DOM",
+      "validConfig": "",
+      "host": "https://www.95txt.com",
+      "responseFormatType": "html",
+      "requestInfo": "@js:\nvar host = String(config.host || 'https://www.95txt.com');\nvar u = '';\nif (params && params.queryInfo) u = params.queryInfo.url || params.queryInfo.detailUrl || '';\nif (!u && params && params.lastResponse && params.lastResponse.nextPageUrl) u = params.lastResponse.nextPageUrl;\nif (!u && typeof result === 'string') u = result;\nif (!u && result && result.url) u = result.url;\nif (!u && result && result.detailUrl) u = result.detailUrl;\nif (!u && params && params.responseUrl) u = params.responseUrl;\nu = String(u).trim().split(/\\s+/)[0] || '';\nif (u && u.indexOf('http') !== 0) u = host + u;\nreturn {'url': u, 'httpHeaders': config.httpHeaders};",
+      "title": "//h1/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+      "content": "//div[@id='content']||@js:\nvar html = String(result || '');\nhtml = html.replace(/<script[\\s\\S]*?<\\/script>/gi, '');\nhtml = html.replace(/<style[\\s\\S]*?<\\/style>/gi, '');\nhtml = html.replace(/<br\\s*\\/?\\s*>/gi, '\\n');\nhtml = html.replace(/<\\/p>/gi, '\\n');\nhtml = html.replace(/<p[^>]*>/gi, '');\nhtml = html.replace(/<[^>]+>/g, '');\nhtml = html.replace(/\\r/g, '');\nhtml = html.replace(/\\n{3,}/g, '\\n\\n');\nhtml = html.replace(/^[\\s\\n]+/, '');\nhtml = html.replace(/[\\s\\n]+$/, '');\nreturn html.trim();",
+      "nextPageUrl": "//a[contains(text(),'下一页')]/@href||@js:\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nif (nxt.indexOf('/xs/') < 0) return '';\nvar cur = String(params.responseUrl || '');\nvar cm = cur.match(/\\/xs\\/(\\d+)\\/([\\d_]+)\\.html/);\nvar nm = nxt.match(/\\/xs\\/(\\d+)\\/([\\d_]+)\\.html/);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nif (nm[2] === cm[2]) return '';\nreturn nxt;"
+    },
+    "bookWorld": {
+      "玄幻": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '1';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "奇幻": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '2';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "武侠": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '3';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "仙侠": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '4';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "都市": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '5';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "军事": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '6';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "历史": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '7';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "游戏": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '8';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "竞技": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '9';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "科幻": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '10';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "悬疑": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '11';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "灵异": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '12';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "其他": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '13';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "古代": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '14';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "现代": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '16';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "浪漫": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '17';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "BL": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '22';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "GL": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '23';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      },
+      "二次元": {
+        "actionID": "bookWorld",
+        "parserID": "DOM",
+        "validConfig": "",
+        "host": "https://www.95txt.com",
+        "responseFormatType": "html",
+        "requestInfo": "@js:\nvar cat = '24';\nif (params && params.filter) cat = String(params.filter);\nelse if (params && params.filters && params.filters.category) cat = String(params.filters.category);\nvar page = parseInt(params.pageIndex || 1, 10);\nif (!page || page < 1) page = 1;\nreturn 'https://www.95txt.com/fenlei/' + cat + '/' + page + '/';",
+        "list": "//div[contains(@class,'item')]",
+        "bookName": "//dl/dt/a/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "author": "//dl/dt/span/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "detailUrl": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "url": "//div[contains(@class,'image')]/a/@href||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "desc": "//dd/text()||@js:return String(result || '').replace(/\\s+/g, ' ').trim();",
+        "cover": "//div[contains(@class,'image')]/a/img/@src||@js:return String(result || '').trim().split(/\\s+/)[0] || '';",
+        "nextPageUrl": "//a[contains(@href,'/fenlei/') and not(contains(@href,'/fenlei/' + curcat + '/1/'))][last()]/@href||@js:\nvar cur = String(params.responseUrl || '');\nvar nxt = String(result || '').trim().split(/\\s+/)[0] || '';\nif (!nxt) return '';\nvar cm = cur.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nvar nm = nxt.match(/\\/fenlei\\/(\\d+)\\/(\\d+)\\//);\nif (!cm || !nm) return '';\nif (cm[1] !== nm[1]) return '';\nvar cp = parseInt(cm[2] || '1', 10);\nvar np = parseInt(nm[2] || '1', 10);\nif (np <= cp) return '';\nreturn nxt;",
+        "moreKeys": {
+          "pageSize": 70,
+          "maxPage": 3,
+          "requestFilters": "category\n玄幻::1\n奇幻::2\n武侠::3\n仙侠::4\n都市::5\n军事::6\n历史::7\n游戏::8\n竞技::9\n科幻::10\n悬疑::11\n灵异::12\n其他::13\n古代::14\n现代::16\n浪漫::17\nBL::22\nGL::23\n二次元::24\n"
+        }
+      }
+    }
+  }
+}

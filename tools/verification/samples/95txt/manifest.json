@@ -1,0 +1,26 @@
+{
+  "searchBook": {
+    "url": "https://www.95txt.com/fenlei/5/1/",
+    "file": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/95txt/searchBook.html",
+    "ok": true,
+    "bytes": 43284
+  },
+  "bookDetail": {
+    "url": "https://www.95txt.com/xs/201190075/",
+    "file": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/95txt/bookDetail.html",
+    "ok": true,
+    "bytes": 16427
+  },
+  "chapterList": {
+    "url": "https://www.95txt.com/xs/201190075/",
+    "file": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/95txt/chapterList.html",
+    "ok": true,
+    "bytes": 16427
+  },
+  "chapterContent": {
+    "url": "https://www.95txt.com/xs/201190075/586082413.html",
+    "file": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/95txt/chapterContent.html",
+    "ok": true,
+    "bytes": 22515
+  }
+}

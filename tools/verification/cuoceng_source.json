@@ -28,31 +28,7 @@
       "moreKeys": {
         "pageSize": 12,
         "maxPage": 3,
-        "requestFilters": [
-          {
-            "key": "category",
-            "items": [
-              {"title": "玄幻", "value": "6b09b233-4d99-4f8f-aeb0-f9772e107d49"},
-              {"title": "仙侠", "value": "c91e0ef9-ad94-480e-a629-4cbddcdd1e3f"},
-              {"title": "都市", "value": "951b15a8-ba9f-4fbd-9790-6df513be5343"},
-              {"title": "历史", "value": "fa7b085f-64ff-4763-a9b9-d0f4f8b98585"},
-              {"title": "科幻", "value": "f7ba5880-1f1e-4938-adb6-ebf4b2217e24"},
-              {"title": "军事", "value": "322eb578-6830-4080-9c54-66a06869aa90"},
-              {"title": "言情", "value": "ed26a15a-9704-459c-9098-532d5edb6b28"},
-              {"title": "轻小说", "value": "b7854bea-86da-4e4e-a530-39075be915df"},
-              {"title": "悬疑", "value": "5456c937-4501-4328-b3b9-c101249539ec"},
-              {"title": "奇幻", "value": "c19ac87c-fad1-4924-8d9f-5d0d6445a62e"},
-              {"title": "游戏", "value": "5ebd2d1f-6efb-478a-b5f9-628aba9146f9"},
-              {"title": "诸天无限", "value": "8dcf411a-99c9-4348-a924-990474f67296"},
-              {"title": "武侠", "value": "258cfd48-26ec-4f2d-9faa-4ffe2310dcb7"},
-              {"title": "重生", "value": "c4f8bd09-5cfa-4098-b31f-a55528cda380"},
-              {"title": "体育", "value": "ccf0bf05-03ae-45f3-8126-ee4670819a5c"},
-              {"title": "现实", "value": "a1c1c751-8804-4c40-964e-85cdb6c2f8d5"},
-              {"title": "穿越", "value": "b96517a8-4171-455f-9cff-89aea91f52d6"},
-              {"title": "未删减", "value": "897f3934-b5b5-4bde-9b89-f5038595bc07"}
-            ]
-          }
-        ]
+        "requestFilters": "category\n玄幻::6b09b233-4d99-4f8f-aeb0-f9772e107d49\n仙侠::c91e0ef9-ad94-480e-a629-4cbddcdd1e3f\n都市::951b15a8-ba9f-4fbd-9790-6df513be5343\n历史::fa7b085f-64ff-4763-a9b9-d0f4f8b98585\n科幻::f7ba5880-1f1e-4938-adb6-ebf4b2217e24\n军事::322eb578-6830-4080-9c54-66a06869aa90\n言情::ed26a15a-9704-459c-9098-532d5edb6b28\n轻小说::b7854bea-86da-4e4e-a530-39075be915df\n悬疑::5456c937-4501-4328-b3b9-c101249539ec\n奇幻::c19ac87c-fad1-4924-8d9f-5d0d6445a62e\n游戏::5ebd2d1f-6efb-478a-b5f9-628aba9146f9\n诸天无限::8dcf411a-99c9-4348-a924-990474f67296\n武侠::258cfd48-26ec-4f2d-9faa-4ffe2310dcb7\n重生::c4f8bd09-5cfa-4098-b31f-a55528cda380\n体育::ccf0bf05-03ae-45f3-8126-ee4670819a5c\n现实::a1c1c751-8804-4c40-964e-85cdb6c2f8d5\n穿越::b96517a8-4171-455f-9cff-89aea91f52d6\n未删减::897f3934-b5b5-4bde-9b89-f5038595bc07\n"
       }
     },
     "bookDetail": {
@@ -118,31 +94,7 @@
         "moreKeys": {
           "pageSize": 12,
           "maxPage": 1,
-          "requestFilters": [
-            {
-              "key": "category",
-              "items": [
-                {"title": "玄幻", "value": "6b09b233-4d99-4f8f-aeb0-f9772e107d49"},
-                {"title": "仙侠", "value": "c91e0ef9-ad94-480e-a629-4cbddcdd1e3f"},
-                {"title": "都市", "value": "951b15a8-ba9f-4fbd-9790-6df513be5343"},
-                {"title": "历史", "value": "fa7b085f-64ff-4763-a9b9-d0f4f8b98585"},
-                {"title": "科幻", "value": "f7ba5880-1f1e-4938-adb6-ebf4b2217e24"},
-                {"title": "军事", "value": "322eb578-6830-4080-9c54-66a06869aa90"},
-                {"title": "言情", "value": "ed26a15a-9704-459c-9098-532d5edb6b28"},
-                {"title": "轻小说", "value": "b7854bea-86da-4e4e-a530-39075be915df"},
-                {"title": "悬疑", "value": "5456c937-4501-4328-b3b9-c101249539ec"},
-                {"title": "奇幻", "value": "c19ac87c-fad1-4924-8d9f-5d0d6445a62e"},
-                {"title": "游戏", "value": "5ebd2d1f-6efb-478a-b5f9-628aba9146f9"},
-                {"title": "诸天无限", "value": "8dcf411a-99c9-4348-a924-990474f67296"},
-                {"title": "武侠", "value": "258cfd48-26ec-4f2d-9faa-4ffe2310dcb7"},
-                {"title": "重生", "value": "c4f8bd09-5cfa-4098-b31f-a55528cda380"},
-                {"title": "体育", "value": "ccf0bf05-03ae-45f3-8126-ee4670819a5c"},
-                {"title": "现实", "value": "a1c1c751-8804-4c40-964e-85cdb6c2f8d5"},
-                {"title": "穿越", "value": "b96517a8-4171-455f-9cff-89aea91f52d6"},
-                {"title": "未删减", "value": "897f3934-b5b5-4bde-9b89-f5038595bc07"}
-              ]
-            }
-          ]
+          "requestFilters": "category\n玄幻::6b09b233-4d99-4f8f-aeb0-f9772e107d49\n仙侠::c91e0ef9-ad94-480e-a629-4cbddcdd1e3f\n都市::951b15a8-ba9f-4fbd-9790-6df513be5343\n历史::fa7b085f-64ff-4763-a9b9-d0f4f8b98585\n科幻::f7ba5880-1f1e-4938-adb6-ebf4b2217e24\n军事::322eb578-6830-4080-9c54-66a06869aa90\n言情::ed26a15a-9704-459c-9098-532d5edb6b28\n轻小说::b7854bea-86da-4e4e-a530-39075be915df\n悬疑::5456c937-4501-4328-b3b9-c101249539ec\n奇幻::c19ac87c-fad1-4924-8d9f-5d0d6445a62e\n游戏::5ebd2d1f-6efb-478a-b5f9-628aba9146f9\n诸天无限::8dcf411a-99c9-4348-a924-990474f67296\n武侠::258cfd48-26ec-4f2d-9faa-4ffe2310dcb7\n重生::c4f8bd09-5cfa-4098-b31f-a55528cda380\n体育::ccf0bf05-03ae-45f3-8126-ee4670819a5c\n现实::a1c1c751-8804-4c40-964e-85cdb6c2f8d5\n穿越::b96517a8-4171-455f-9cff-89aea91f52d6\n未删减::897f3934-b5b5-4bde-9b89-f5038595bc07\n"
         }
       }
     }

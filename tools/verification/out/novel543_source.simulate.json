@@ -1,0 +1,264 @@
+{
+  "input": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/novel543_source.json",
+  "mode": "live",
+  "engine": "auto",
+  "webview_timeout_seconds": 25,
+  "normalization": {
+    "input_type": "json",
+    "decoded_json": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/novel543_source.json",
+    "source_alias": "稷下书院-v0707",
+    "source_mode": "new",
+    "change_count": 0,
+    "changes": []
+  },
+  "schema_check": {
+    "status": "PASS",
+    "errors": [],
+    "warnings": [],
+    "source_count": 1
+  },
+  "editor_check": {
+    "status": "WARN",
+    "strict": false,
+    "risk_count": 2,
+    "high_risk_count": 0,
+    "medium_risk_count": 2,
+    "risks": [
+      {
+        "level": "medium",
+        "code": "NEW_SCHEMA_WRAPPER",
+        "path": "<top>",
+        "message": "使用新 schema wrapper（sourceName/sourceUrl），请执行编辑页保存回归验证"
+      },
+      {
+        "level": "medium",
+        "code": "TOP_HTTPHEADERS",
+        "path": "httpHeaders",
+        "message": "顶层 httpHeaders 是对象，属于已知保存崩溃嫌疑字段簇"
+      }
+    ]
+  },
+  "simulation_verdict": {
+    "status": "pass",
+    "pass": true,
+    "blocked_reason": "",
+    "fail_reasons": [],
+    "warnings": [
+      "[searchBook.status] searchBook optional field missing: status",
+      "[searchBook.lastChapterTitle] searchBook optional field missing: lastChapterTitle",
+      "[searchBook.cat] searchBook optional field missing: cat",
+      "[searchBook.cover] searchBook optional field missing: cover",
+      "[bookDetail.desc] bookDetail optional field missing: desc"
+    ]
+  },
+  "overall_verdict": {
+    "status": "pass",
+    "pass": true
+  },
+  "steps": {
+    "searchBook": {
+      "step": "searchBook",
+      "status": "pass",
+      "runtime_engine": "http",
+      "blocked": false,
+      "blocked_reason": "",
+      "elapsed_ms": 1551,
+      "request": {
+        "method": "GET",
+        "url": "https://www.novel543.com/bookstack/xuanhuan/",
+        "http_params_count": 0,
+        "http_header_count": 3
+      },
+      "response": {
+        "status": 200,
+        "url": "https://www.novel543.com/bookstack/xuanhuan/",
+        "body_mode": "live",
+        "fixture_used": ""
+      },
+      "parse": {
+        "list_length": 18,
+        "sample_item_keys": [
+          "author",
+          "bookName",
+          "desc",
+          "detailUrl",
+          "url"
+        ],
+        "sample_item": {
+          "bookName": "釣起一座世界",
+          "author": "魚生",
+          "detailUrl": "/0223700861/",
+          "url": "/0223700861/",
+          "desc": "釣魚仙人：我坦白，我作弊了，我讓分身太古雷龍在水下掛魚。釣魚仙人：我坦白，我有掛，我釣魚就能變強。這..."
+        }
+      },
+      "webview_applied_keys": [],
+      "webview_trace": [],
+      "errors": [],
+      "warnings": [
+        "searchBook optional field missing: status",
+        "searchBook optional field missing: lastChapterTitle",
+        "searchBook optional field missing: cat",
+        "searchBook optional field missing: cover"
+      ]
+    },
+    "bookDetail": {
+      "step": "bookDetail",
+      "status": "pass",
+      "runtime_engine": "http",
+      "blocked": false,
+      "blocked_reason": "",
+      "elapsed_ms": 506,
+      "request": {
+        "method": "GET",
+        "url": "https://www.novel543.com/0223700861/",
+        "http_params_count": 0,
+        "http_header_count": 3
+      },
+      "response": {
+        "status": 200,
+        "url": "https://www.novel543.com/0223700861/",
+        "body_mode": "live",
+        "fixture_used": ""
+      },
+      "parse": {
+        "list_length": 0,
+        "sample_item_keys": [
+          "author",
+          "bookName",
+          "cat",
+          "cover",
+          "desc",
+          "detailUrl",
+          "lastChapterTitle",
+          "status",
+          "updateTime",
+          "url"
+        ],
+        "sample_item": {
+          "detailUrl": "/0223700861/",
+          "bookName": "釣起一座世界",
+          "author": "魚生",
+          "cover": "https://i2.novel543.com/thumb_qm/120x160/20260811/041060086190.jpg",
+          "cat": "玄幻",
+          "status": "連載",
+          "desc": "",
+          "lastChapterTitle": "第52章 當眾擊敗蕭元生",
+          "updateTime": "2026-08-11 05:35:06",
+          "url": "/0223700861/"
+        }
+      },
+      "webview_applied_keys": [],
+      "webview_trace": [],
+      "errors": [],
+      "warnings": [
+        "bookDetail optional field missing: desc"
+      ]
+    },
+    "chapterList": {
+      "step": "chapterList",
+      "status": "pass",
+      "runtime_engine": "http",
+      "blocked": false,
+      "blocked_reason": "",
+      "elapsed_ms": 476,
+      "request": {
+        "method": "GET",
+        "url": "https://www.novel543.com/0223700861/dir",
+        "http_params_count": 0,
+        "http_header_count": 3
+      },
+      "response": {
+        "status": 200,
+        "url": "https://www.novel543.com/0223700861/dir",
+        "body_mode": "live",
+        "fixture_used": ""
+      },
+      "parse": {
+        "list_length": 52,
+        "sample_item_keys": [
+          "detailUrl",
+          "title",
+          "url"
+        ],
+        "sample_item": {
+          "title": "第1章 無盡海洋",
+          "url": "/0223700861/8095_1.html",
+          "detailUrl": "/0223700861/8095_1.html"
+        }
+      },
+      "webview_applied_keys": [],
+      "webview_trace": [],
+      "errors": [],
+      "warnings": []
+    },
+    "chapterContent": {
+      "step": "chapterContent",
+      "status": "pass",
+      "runtime_engine": "http",
+      "blocked": false,
+      "blocked_reason": "",
+      "elapsed_ms": 876,
+      "request": {
+        "method": "GET",
+        "url": "https://www.novel543.com/0223700861/8095_1.html",
+        "http_params_count": 0,
+        "http_header_count": 4
+      },
+      "response": {
+        "status": 200,
+        "url": "https://www.novel543.com/0223700861/8095_1.html",
+        "body_mode": "live",
+        "fixture_used": ""
+      },
+      "parse": {
+        "list_length": 0,
+        "sample_item_keys": [
+          "content",
+          "title"
+        ],
+        "sample_item": {
+          "title": "第1章 無盡海洋 (1/2)",
+          "content": "無盡海洋深處有魚，其名為鯤。鯤之大，不知其幾千里也。 鯤沉睡，一呼一吸三十年，掀起滔天巨浪，浩蕩幾億里。 …… 陳峰睜開眼睛，發現自己躺在一間四處漏風的破舊泥牆屋裡。 “我這是在哪？”他爬坐起來，努力回憶自己昏迷前的事。 下一刻，大量陌生的記憶在腦海里浮起，令他應接不暇。 等他消化了陌生記憶，他臉上不由露出古怪的表情。 沒錯，他穿越了，穿越到一個幾乎全是海水的世界，人們只能生活在島礁上。 礁島產出十分有限，人們捕魚為生。 原身是一個十七歲少年，身材修長，劍眉星目，勉強有他幾分英姿。 其家境貧困，和十五歲的妹妹相依為命。 幾天前，原身捕到了一條寶魚，在碼頭上賣得兩顆中品珍珠（珍珠是這片海域的流通貨幣）。 豈料，原身剛走出碼頭，就被惡貫滿盈的金鱗幫截住。 若是往常，原身會屈服於金鱗幫凶名交出所得的珍珠，但是三十年一次的大潮汐即將到來，他若掙不夠珍珠的話，他和妹妹會被淹死，因此死也不肯交出珍珠。 大潮汐會淹沒幾乎所有的海島和海礁，並且還有大量魚妖海怪隨著大潮汐到來，趁機吃人。 唯有寥寥的幾座大島因地勢高聳而倖免。 人們要活下去，就必須登上那幾座大島，否則哪怕在大船上，也會被魚妖海怪破壞船隻而吃掉。 但是要登上那幾座大島，每人必須繳納十顆中品珍珠。 大潮汐每三十年一次，如今離大潮汐只剩下三個月了。 原身被金鱗幫的人毆打得重傷吐血，乃至昏迷，那兩顆中品珍珠當然也被搶走了。 原身在家裡救治了幾天，沒撐過去死了。 吱啞—— 門被人輕輕推開，光線投了進來，幽暗的房間變亮了許多。 陳峰下意識轉頭望去，看見一個身材苗條、眼眸雪亮的俏麗少女披著光走進來。 “哥，你醒了？！”俏麗少女看著陳峰驚喜大叫。 俏麗少女快步走到陳峰面前，關心問道：“哥，你現在感覺怎麼樣？” 陳峰仔細感受身體，才發現自己沒有什麼不適，應該是得益於他穿越過來的緣故。 “我沒事了。”他露出笑容道。 接受了原身記憶，他的靈魂和原身靈魂基本融為一體，很自然地把少女當成親妹妹。 俏麗少女突然投入陳峰懷裡，嗚嗚地哭起來：“嗚嗚，哥哥，你嚇死靈兒了。嗚嗚，靈兒好害怕，嗚嗚……” 感受著懷裡少女柔軟的身子，聽著少女后怕的哭泣聲，陳峰心中升起愛憐。 他抬手輕撫少女的青絲秀髮，柔聲安慰道：“妹妹別哭，哥保證以後不會再有事。” 俏麗少女陳靈兒在陳峰懷裡哭了一陣，突然想起一事，立即離開陳峰懷裡，抬手摸陳峰的額頭。 “不燒了。”她破涕為笑地道。 陳峰微笑道：“我都說我身體沒事了，你不必擔心。” 說完，他就要下床，但是立即被陳靈兒阻止。 “哥你別逞強，好好養傷。”陳靈兒說道。 陳峰強調道：“我真的沒事了。” 說著，他要站起來活動，證明給陳靈兒看。 豈料，陳靈兒突然“嗚嗚”地哭了起來。 這可把陳峰嚇著了，連忙問道：“妹妹，你怎麼突然哭了？” 陳靈兒哭得面帶梨花，斷斷續續道：“靈兒知道哥哥想掙珍珠，但是靈兒不想哥哥帶重傷出海打漁。” “而且，我們再去掙珍珠也沒什麼大用了。” 陳峰疑惑問道：“為什麼？” 陳靈兒道：“我們家本來一共有十七顆中品珍珠，這幾天花了五顆中品珍珠，家裡只剩下十二顆中品珍珠。我們不可能在三個月內再掙到八顆中品珍珠了。” 陳峰眉頭大皺，他家的中品珍珠缺口反而加大了。 陳靈兒繼續道：“靈兒聽村裡老人說，大潮汐還沒到來，島上就已經是人間煉獄，各種燒殺搶奪，橫屍遍野。接下的日子就算我們運氣好，再捕到寶魚，還是會被金鱗幫搶去，掙不到珍珠。” 她停止哭泣，收了淚水，在俏麗的臉上努力擠出認命的微笑：“靈兒已經想好了，靈兒去給村長（七十多歲）當小妾。村長說只要靈兒嫁給他，他就帶靈兒上大魁島。” “家裡的十二顆品珍珠夠哥哥登上大魁島，和在大魁島上生活。” “我不同意！”陳峰斷然反對道，“妹妹，我寧願自己被大潮汐淹死，也絕不會讓你嫁給那老東西！” 陳靈兒對陳峰的反對置若罔聞，她伸手要扶陳峰躺下，乞求道：“哥，你好好養傷，好嗎？” “行吧，我休息一會兒。”陳峰沒反對，順從地躺下。他也需要靜一靜，好好消化原身的記憶，從中找到破局辦法。 陳靈兒溫柔地給陳峰蓋上被子后，站了起來：“靈兒去熬藥了。” 然後，她轉身走出房門，關上破舊的木門。 陳峰閉上眼睛，消化原身記憶，找辦法帶妹妹度過大潮汐這場生死浩劫。 他閉上眼睛不一會兒，突然發現自己竟在海水裡遊動。 “我怎麼在海水了？”他內心驚訝，轉頭四顧，無意中看見身後是大半條熟眼的海鰻身軀。 “那條海鰻也跟著穿越了？不是！我怎麼成了那條海鰻了？” 剎那間，他想起自己是怎麼穿越的了。 他海釣上長達一米五六、粗如成年男人手臂的海鰻，當時手賤摸了一下海鰻，結果那條海鰻違背生物常識的釋放出大量電弧，一下子把他電死了。 就在這時，一條三四米長的闊口鯰魚妖突然竄過來，張開堪比窗戶的巨口，一口把陳峰吞進去。 陳峰感到眼前一黑，緊接著是四面八方傳來強大的擠壓，他本能地掙扎，釋放出電流。 嗞嗞嗞——啪！ 黑暗中亮起了銀白色的電光，強大的擠壓隨之消失。 那闊口鯰魚妖被內部爆破，電暈死過去了。 陳峰迅速轉身從魚嘴鑽出來，看見一條長達三四米的黑色巨鯰在海水中緩緩下沉。 “好險，要不是我能放電，肯定葬身魚腹了。”他心有餘悸。 下一刻，他莫名升起一股兇殘：“竟敢偷襲吃我？老子吃了你！” (function(){ \"undefined\"==typeof window.TAMadLoadA&&function(a,e,f,g,b,c,d){a[b]=a[b]||{};a[b].send=a[b].send||function(){(a[b].q=a[b].q||[]).push(arguments)};c=e.createElement(f);d=e.getElementsByTagName(f)[0];c.async=1;c.src=\"https://adc.tamedia.com.tw/rmadp/static/js/\"+g;d.parentNode.insertBefore(c,d)}(window,document,\"script\",\"sdk-async-v2.js\",\"TAMadLoadA\"); window.TAMadLoadA.send('TAMedia_AD', '', 'b9z1713409295727f5', '', 'div-tam-ad-b9z1713409295727f5', true, 0, function(status){ console.log('%c[TAMedia]%c Callback status : ' + status, 'background:#DDDDDD;color:#FF5511;', 'background:#DDDDDD;color:#000000;'); }); })();\n他向闊口鯰魚妖游下去，張開突出的尖吻嘴，露出滿口的利牙，朝闊口鯰魚妖的柔軟肚皮狠狠咬去。 他用力撕扯下一塊肉，吞下去。 緊接著，他又撕扯第二口肉、第三口肉。 很快，他咬穿了闊口鯰魚妖的肚子，把錐狀頭鑽進去，咬闊口鯰魚妖的內臟。 闊口鯰魚妖終於痛醒，瘋狂地甩動身軀，要把陳峰甩出來。 陳峰也不放電，因為放電需要消耗大量力氣，他用力扭動身軀，進一步鑽入闊口鯰魚妖的肚子，不斷地咬闊口鯰魚妖的內臟。 不一會兒，陳峰咬穿了闊口鯰魚妖的內臟，進一步咬斷了闊口鯰魚妖的主椎骨。 闊口鯰魚妖再也無法動彈，身軀緩緩向海底下沉，儘管它生命力頑強，還沒死。 陳峰也終於鬆了一口氣，停下來喘息。 下一刻，他感到肚子暖和，有一股明顯的暖流向全身擴散，很是舒服。 不僅如此，曖流擴散到的地方，疲勞消退，力量增加。 陳峰腦海里浮起原身少年的記憶：“這條巨鯰不是普通魚，而是一條魚妖。我吃了它的血肉，能獲得修為！” 明白過來，陳峰立即轉身朝闊口鯰魚妖的頭部鑽咬去。 很快，他找到了一顆發光的珠子——妖丹。 陳峰不作多想，立即把妖丹吞下去。 隨著妖丹吞下，一股龐大而狂暴的妖力在他體內肆虐，陳峰感到極難受，全身如吹氣球地膨脹，感覺自己要爆炸了。 他下意識地痛苦扭動身軀，鑽出闊口鯰魚妖肚子，在海水裡翻騰。 “我要被撐爆了！”陳峰頭腦幾乎迷糊掉，看見的東西全都是扭曲紅血。 好在海鰻僅是他的分身，他仍能保持基本清明。 “對了，放電！通過放電把多餘的妖力釋放出去！”陳峰心念電轉，想到了這個辦法。 於是，他立即全身放電，銀白色的電弧滿布了他一米五六的圓柱狀身軀。 滋滋滋滋…… 那些聞著血腥味游過來的魚類無不遭了大殃，不是被電死，就是被電暈過去。 隨著瘋狂放電，陳峰立即感到龐大而狂暴的妖力有了泄口去處，全身好受了不少，避免了被撐爆的危險。 為了更好的釋放電流，陳峰不斷地繞圈遊動，範圍內的魚蝦海貝無不遭殃。 持續了半個小時，陳峰終於感到妖丹散發出的妖力變弱，他不放電也能承受得住。 他停了下來，感到身體內有一股能按他心意遊走的熱流。 “這股熱流應該是妖力吧？”他一邊猜測，一邊喜悅暗道，“我成為妖獸了！” “等等，我明明穿越到一個少年身上！” 下一刻，陳峰的意識迅速抽離了電海鰻，回到了少年身軀上。 睜開眼睛，看見自己仍躺在四處漏風的泥牆屋裡。 飛快地摸了摸全身，確定自己有雙臂雙腿，不是一條電海鰻，陳峰鬆了一口氣。 “好奇怪。”陳峰暗道，“難道我的靈魂被電成了兩部分？一部分在這裡，另一部分在那條電海鰻身上？” 他重新閉上眼睛，冥冥之中感應到那條電海鰻存在，而且不遙遠。 就在他把注意力放到電海鰻身上時，眼前景色徒然一變，眼前都是海水了，以及大量被電魚電暈的魚類。 “這條電海鰻我能隨時入主控制，那我豈不是可以讓它幫我捕魚？甚至，讓電海鰻幫我捕捉寶魚！”陳峰暢想道，心中大喜不已，“哈哈，三個月內掙夠二十顆中品珍珠肯定沒問題！” 大喜之餘，陳峰向已經沉到海底的闊口鯰魚妖屍體游去，一口咬住闊口鯰魚妖背上的堅韌魚皮，然後朝一處石縫水穴拖去。 闊口鯰魚妖吃了能獲得修為，他要藏好當食物。 把闊口鯰魚妖屍體拖到石縫下后，陳峰自己也鑽了進去水穴內。 隨著一陣陣睡意襲來，他閉上了眼睛。 他感覺到電海鰻要進化了。 廚房，陳靈兒正在為陳峰熬藥，灶火把她俏臉烘得熱紅，額頭汗水涔涔。 忽然，她聽到院子的柴門傳來動靜，料想是有人登門。 她走出廚房看去，看見一個瘦狗一樣的男人走進來，正賊眉鼠眼地東張西望，一副要偷東西的樣子。 “賴瘦狗，你到我家做什麼？”陳靈兒快步走過去，擋在瘦狗男人面前，痛恨地罵道，“滾出去！” 不怪她對賴瘦狗充滿仇恨，圍毆搶劫陳峰的幾個金鱗幫眾中，就有賴瘦狗。 這賴瘦狗還是同村人，算半個鄰居。 俗語說，兔子不吃窩邊草。出門在外，看見同村人有難，有能力的話都會伸一把手。這賴瘦狗倒好，反而聯合外人毆打搶劫同村人。 賴瘦狗對陳靈兒的話充耳不聞，一雙眼睛盯著陳靈兒俏麗的臉蛋和亭亭玉立的身子打量，臉上露出淫邪的笑容：“小靈兒，你哥死了吧？” “呸！”陳靈兒朝賴瘦狗的臉上唾了一口，杏眼怒瞪道，“我哥好著呢！賴瘦狗，你不是東西，連同村人都搶！” 賴瘦狗用手把臉上的口水抹去，再把手掌放到嘴巴舔了舔，淫笑道：“嘿嘿，好香甜。” 陳靈兒噁心得不行，但是她奈何不了賴瘦狗，只能罵道：“賴瘦狗，但凡你還是個人，就滾出我家！” 賴瘦狗怪笑道：“你親哥死了，就讓我這個好哥哥安慰安慰你……” 說著，他張開雙臂向陳靈兒撲去。 陳靈兒“啊”地尖叫一聲，驚慌地閃躲逃開：“賴瘦狗，你要幹嘛？” 賴瘦狗追著陳靈兒撲去：“哈哈，小靈兒別躲，讓好哥哥安慰你……” “我哥醒了……”陳靈兒驚恐地拚命逃跑閃躲，警告叫道。 賴瘦狗更是得意大笑：“哈哈，正好把他氣死……” 砰！ 陳峰房門突然打開，陳峰從裡面衝出來，手裡拿著一根雞蛋粗、一米長的木棒，滿臉殺氣地向賴瘦狗撲去。 賴瘦狗聽到聲音，轉頭看見陳峰，嚇得屁滾尿流，慌忙轉身向外逃跑。 他逃到了院子柴門，可是柴門被他之前關上了，無法直接逃出去。 陳峰追了上去，全力一棒打在賴瘦狗身上。 嘭—— 賴瘦狗慘叫一聲，倒在地上。 陳峰毫無罷手的意思，繼續全力一棒砸在賴瘦狗身上。 啊—— 賴瘦狗慘叫聲高揚。  (function(){ \"undefined\"==typeof window.TAMadLoadA&&function(a,e,f,g,b,c,d){a[b]=a[b]||{};a[b].send=a[b].send||function(){(a[b].q=a[b].q||[]).push(arguments)};c=e.createElement(f);d=e.getElementsByTagName(f)[0];c.async=1;c.src=\"https://adc.tamedia.com.tw/rmadp/static/js/\"+g;d.parentNode.insertBefore(c,d)}(window,document,\"script\",\"sdk-async-v2.js\",\"TAMadLoadA\"); window.TAMadLoadA.send('TAMedia_AD', '', 'qV1715164752550Y', '', 'div-tam-ad-qV1715164752550Y', true, 0, function(status){ console.log('%c[TAMedia]%c Callback status : ' + status, 'background:#DDDDDD;color:#FF5511;', 'background:#DDDDDD;color:#000000;'); }); })();"
+        }
+      },
+      "webview_applied_keys": [],
+      "webview_trace": [],
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "runtime": {
+    "node_bin": "/opt/homebrew/bin/node",
+    "validator_root": "/Users/mantou/Documents/idea/xiangseSkill/tools/validator",
+    "validator_cli": "/Users/mantou/Documents/idea/xiangseSkill/tools/validator/src/cli.js",
+    "command": [
+      "/opt/homebrew/bin/node",
+      "/Users/mantou/Documents/idea/xiangseSkill/tools/validator/src/cli.js",
+      "run",
+      "--input",
+      "/var/folders/n9/wnjljy094376z_ydggc82dyc0000gn/T/xbs_sim_hvfb2en9/novel543_source.import_fixed.json",
+      "--mode",
+      "live",
+      "--engine",
+      "auto",
+      "--webview-timeout",
+      "25",
+      "--keyword",
+      "都市",
+      "--page-index",
+      "1",
+      "--offset",
+      "0",
+      "--book-index",
+      "0",
+      "--chapter-index",
+      "0",
+      "--min-content-length",
+      "50",
+      "--output",
+      "/var/folders/n9/wnjljy094376z_ydggc82dyc0000gn/T/xbs_sim_hvfb2en9/validator.report.json"
+    ],
+    "returncode": 0
+  }
+}

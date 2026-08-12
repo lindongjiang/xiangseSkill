@@ -1,0 +1,267 @@
+{
+  "input": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/wcshuba_source.json",
+  "mode": "fixture",
+  "engine": "auto",
+  "webview_timeout_seconds": 25,
+  "normalization": {
+    "input_type": "json",
+    "decoded_json": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/wcshuba_source.json",
+    "source_alias": "無錯書吧-v0811",
+    "source_mode": "new",
+    "change_count": 0,
+    "changes": []
+  },
+  "schema_check": {
+    "status": "PASS",
+    "errors": [],
+    "warnings": [],
+    "source_count": 1
+  },
+  "editor_check": {
+    "status": "WARN",
+    "strict": false,
+    "risk_count": 2,
+    "high_risk_count": 0,
+    "medium_risk_count": 2,
+    "risks": [
+      {
+        "level": "medium",
+        "code": "NEW_SCHEMA_WRAPPER",
+        "path": "<top>",
+        "message": "使用新 schema wrapper（sourceName/sourceUrl），请执行编辑页保存回归验证"
+      },
+      {
+        "level": "medium",
+        "code": "TOP_HTTPHEADERS",
+        "path": "httpHeaders",
+        "message": "顶层 httpHeaders 是对象，属于已知保存崩溃嫌疑字段簇"
+      }
+    ]
+  },
+  "simulation_verdict": {
+    "status": "pass",
+    "pass": true,
+    "blocked_reason": "",
+    "fail_reasons": [],
+    "warnings": [
+      "[searchBook.lastChapterTitle] searchBook optional field missing: lastChapterTitle",
+      "[searchBook.cat] searchBook optional field missing: cat",
+      "[searchBook.cover] searchBook optional field missing: cover"
+    ]
+  },
+  "overall_verdict": {
+    "status": "pass",
+    "pass": true
+  },
+  "steps": {
+    "searchBook": {
+      "step": "searchBook",
+      "status": "pass",
+      "runtime_engine": "http",
+      "blocked": false,
+      "blocked_reason": "",
+      "elapsed_ms": 103,
+      "request": {
+        "method": "GET",
+        "url": "https://www.wcshuba.com/search/?searchkey=%E8%85%90%E6%9C%BD%E4%B8%96%E7%95%8C",
+        "http_params_count": 0,
+        "http_header_count": 3
+      },
+      "response": {
+        "status": 200,
+        "url": "https://www.wcshuba.com/search/?searchkey=%E8%85%90%E6%9C%BD%E4%B8%96%E7%95%8C",
+        "body_mode": "fixture",
+        "fixture_used": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/wcshuba/searchBook.html"
+      },
+      "parse": {
+        "list_length": 4,
+        "sample_item_keys": [
+          "author",
+          "bookName",
+          "cover",
+          "desc",
+          "detailUrl",
+          "status",
+          "url",
+          "wordCount"
+        ],
+        "sample_item": {
+          "bookName": "腐朽世界",
+          "author": "滾開",
+          "detailUrl": "/book/3254.html",
+          "url": "/book/3254.html",
+          "desc": "神秘，绝望，痛苦，腐朽，世界走向迷途，我却不知何去何从。来到一个正在走向末路的世界，危机四伏，渺无希望，我只能依靠身上的神秘血印，不断推演进化各类技能，尝试走出一条绝望生路。",
+          "status": "連載",
+          "wordCount": "143.8萬字",
+          "cover": ""
+        }
+      },
+      "webview_applied_keys": [],
+      "webview_trace": [],
+      "errors": [],
+      "warnings": [
+        "searchBook optional field missing: lastChapterTitle",
+        "searchBook optional field missing: cat",
+        "searchBook optional field missing: cover"
+      ]
+    },
+    "bookDetail": {
+      "step": "bookDetail",
+      "status": "pass",
+      "runtime_engine": "http",
+      "blocked": false,
+      "blocked_reason": "",
+      "elapsed_ms": 88,
+      "request": {
+        "method": "GET",
+        "url": "https://www.wcshuba.com/book/3254.html",
+        "http_params_count": 0,
+        "http_header_count": 3
+      },
+      "response": {
+        "status": 200,
+        "url": "https://www.wcshuba.com/book/3254.html",
+        "body_mode": "fixture",
+        "fixture_used": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/wcshuba/bookDetail.html"
+      },
+      "parse": {
+        "list_length": 0,
+        "sample_item_keys": [
+          "author",
+          "bookName",
+          "cat",
+          "cover",
+          "desc",
+          "detailUrl",
+          "lastChapterTitle",
+          "status",
+          "updateTime",
+          "url"
+        ],
+        "sample_item": {
+          "detailUrl": "/book/3254.html",
+          "bookName": "腐朽世界",
+          "author": "滾開",
+          "cover": "https://pic.wcshuba.com/3/3254/3254s.webp",
+          "cat": "玄幻",
+          "status": "連載",
+          "desc": "神秘，絕望，痛苦，腐朽，世界走向迷途，我卻不知何去何從。來到一個正在走向末路的世界，危機四伏，渺無希望，我只能依靠身上的神秘血印，不斷推演進化各類技能，嘗試走出一條絕望生路。",
+          "lastChapterTitle": "第332章 332天下 二",
+          "updateTime": "2026-08-11 12:07:27",
+          "url": "/book/3254.html"
+        }
+      },
+      "webview_applied_keys": [],
+      "webview_trace": [],
+      "errors": [],
+      "warnings": []
+    },
+    "chapterList": {
+      "step": "chapterList",
+      "status": "pass",
+      "runtime_engine": "http",
+      "blocked": false,
+      "blocked_reason": "",
+      "elapsed_ms": 69,
+      "request": {
+        "method": "GET",
+        "url": "https://www.wcshuba.com/chapterlist/3254.html",
+        "http_params_count": 0,
+        "http_header_count": 3
+      },
+      "response": {
+        "status": 200,
+        "url": "https://www.wcshuba.com/chapterlist/3254.html",
+        "body_mode": "fixture",
+        "fixture_used": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/wcshuba/chapterList.html"
+      },
+      "parse": {
+        "list_length": 200,
+        "sample_item_keys": [
+          "detailUrl",
+          "title",
+          "url"
+        ],
+        "sample_item": {
+          "title": "第1章 001覺醒",
+          "url": "/read/3254/1870737.html",
+          "detailUrl": "/read/3254/1870737.html"
+        }
+      },
+      "webview_applied_keys": [],
+      "webview_trace": [],
+      "errors": [],
+      "warnings": []
+    },
+    "chapterContent": {
+      "step": "chapterContent",
+      "status": "pass",
+      "runtime_engine": "http",
+      "blocked": false,
+      "blocked_reason": "",
+      "elapsed_ms": 30,
+      "request": {
+        "method": "GET",
+        "url": "https://www.wcshuba.com/read/3254/1870737.html",
+        "http_params_count": 0,
+        "http_header_count": 3
+      },
+      "response": {
+        "status": 200,
+        "url": "https://www.wcshuba.com/read/3254/1870737.html",
+        "body_mode": "fixture",
+        "fixture_used": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/wcshuba/chapterContent.html"
+      },
+      "parse": {
+        "list_length": 0,
+        "sample_item_keys": [
+          "content",
+          "title"
+        ],
+        "sample_item": {
+          "title": "第1章 001覺醒",
+          "content": "黑夜，四周如墨。\n 一點豆大的橙色火苗靜靜在黑暗中燃燒著。\n 彷彿是世界唯一的光亮。\n 火苗跳動著，搖曳著，彷彿一口氣就能將其吹滅。無比脆弱。\n 在它散發的脆弱光亮裡，一側悄悄坐著一個面色蒼白滿眼血絲的年輕男子。\n 男子大概十五六歲，五官平凡毫無特點，嘴微微咬著下唇，唇色血色很淡，似乎前不久才失血過。\n 他頭髮細長烏黑，如同女子般在身後紮了個簡單的高馬尾，身上穿著灰褐色蜈蚣扣棉布長衣，長衣一直拖到膝蓋處，遮住大半同樣顏色的簡樸長褲。\n 咚咚咚。\n 忽地，黑暗中不遠處，傳來一陣輕微敲門聲。\n 是手指關節敲擊輕薄木質的動靜，在安靜的夜晚裡顯得尤為清晰。\n 咚咚咚.敲擊聲又響了一次。\n 火苗邊的男子身體抖了下，沒有出聲。他明明聽到了，但卻絲毫沒有回應的意思。\n “睡著了麼？”一聲嘆息在門外傳來，是個上了年紀的中年女性聲音，她踟躕了下，轉身慢慢離開了。\n 直到腳步聲徹底聽不見，火苗邊的男子才微微鬆口氣。\n 他伸出雙手，輕輕遮住火苗，感受著掌心傳來的細微溫暖，臉上微微露出了放鬆的表情。\n “小輝，你不該點燈。”一個壓低的聲音從男子背後輕輕傳來。\n “點燈了會引來一些不該來的東西。晚上和白天不一樣！”那聲音慢慢靠近，緊接著，火苗邊上的另一側，慢慢顯露出一張和男子有七分相似的疲憊女子面孔。\n 她帶著擔憂注視著男子。\n “怎麼了？又睡不著了？最近幾天你總是半夜驚醒，是白天遇到了什麼麼？”\n “娘你怎麼也醒了，我故意把燈壓得小一些，就是不想吵醒你們。”男子歉意道。“我只是，最近有些睡不好”\n 聽到這話，中年女子嘆了口氣，輕輕拍拍男子肩膀。\n “怪孃親沒本事，不能搬進內城.否則何至於.”\n 她沒再說下去，只是臉上的憂色更濃了。\n “好了，娘你繼續睡吧，我就坐一小會，馬上就回去睡。”男子擠出個微笑，表明自己沒關係。\n “行你爹一會兒天亮就要去監工，我得再補覺，不然到時候起不來。”中年女子點點頭，起身去了房門口檢查了下門窗是否關好。然後在黑暗中，準確的摸索著捏了捏懸掛在門邊牆上的一枚紫黑石塊。\n 確定石塊沒問題後，她才轉身，窸窸窣窣的進了裡屋，很快便傳來上床的木質吱嘎聲，還有老男人嘟噥著翻身的動靜。\n 火苗邊，再度恢復安靜。\n 男子依舊獨自坐著，腦海裡卻是閃過了這幾天如墜夢裡的情景。\n 每天他都在做夢，或許那根本不是夢，而是自己曾經度過的另一段人生。\n 在那段人生的世界裡，高樓大廈，汽車飛機，人類統治星球正奔向星空，平民們也不愁吃喝，大部分人都靠著手機電腦打發時間。\n 遠遠不像現在，這麼艱難。\n 男子伸出食指，在光亮昏暗的地面，輕輕書寫出兩個字——林輝。\n 這是他的名字，也是他這輩子唯一的記號。\n 擦掉痕跡，他輕輕吐了口氣，站起身，小心的離開火苗，來到房間的門窗邊。\n 透過薄薄的窗戶，他找了幾個小孔洞，偷眼朝外望去。\n 林家住的是大院子，一大家人足足數十人，是周邊有數的人丁興旺大族。\n 此時映入他眼中的，是一片四四方方的中式四合院。\n 院子裡假山水池，大樹涼亭，應有盡有。\n 只是所有的一切，都籠罩在一片薄薄的灰白霧氣中。\n 這叫迷霧。\n 這輩子林輝所在的環境極其麻煩。\n 或者不能用麻煩來形容，而是危險。\n 白天城外遊蕩著各式各樣奇形怪狀生物，夜晚迷霧籠罩，又有詭異恐怖的各類危險四處飄蕩。\n 在這裡，白天人們依靠城池高牆，躲避怪物猛獸災害。夜晚，則靠著從內城衙門領來的涂月玉符，保護家院，不敢外出。\n 這些都是林輝這幾天清醒後，從記憶裡挖掘整理出來的情況。\n 而這，還不是最讓他感覺詭異的。\n 嘶。\n 林輝小心用手指將眼前的孔洞戳得稍微大一點，以便讓自己能看得更清楚。\n 此時，他看到的外面院子情況，居然和白天林家本身的大院子，完全不同！\n 是的，完全不一樣！\n 林家雖然也是大族，但院子可沒這麼精貴，裝飾修繕也都是基本保證生活的樣子，哪像眼前這個院子，一副大富人家的奢侈風格。\n 水池假山涼亭這些東西，壓根就是需要長時間請人維護才能保持乾淨的享受實物，哪裡是他們林家能用得起的。\n 可現在，薄霧裡，林輝眼中看到的，卻又是那麼的清晰，真實。\n 咕嚕。\n 林輝喉嚨裡不自覺的嚥了口唾沫。\n 他很慌。\n 如果說在覺醒前世記憶前，看到眼前這天天都見的一幕，他還不至於這麼慌。\n 可在覺醒後，他才清醒的認識到，眼前看到的這些東西，到底代表著什麼。\n 這就是這裡詭異的一大要點。\n 每天晚上，迷霧瀰漫下，出現在住宅外的景物都不一樣。\n 夜晚是不允許外出的，除開那些遊蕩的神秘威脅外，最大的關鍵，便是因為這個了。\n 每天晚上，窗外霧氣籠罩後，會先濃，再慢慢變淡，之後人能看到的景色，會都各有不同。\n 迄今為止，林輝已經在家裡看過了起碼數十種不同風格的怪異庭院。\n 有時會重複，但大部分時間都在變化。\n 各種各樣的中式古代風格庭院換來換去，都是陳舊破敗風，顯然很長時間都沒人打理了。\n 站在窗戶口，林輝就這麼靜靜看著外面，一動不動，宛如雕塑。\n 直到外面霧氣慢慢重新變濃，然後又過了一個多小時，才再度變淡，重新恢復原本林家的院子擺設。\n 一切才悄然恢復正常。\n 而此時，天光從東方緩緩亮起，整個院子彷彿什麼也沒發生過一般，恢復正常。\n 林輝看到這一幕，才長舒了口氣，慢慢退後幾步，回到油燈邊上。\n 噗。\n 他一口氣將燈吹滅。\n 看著白色的天光慢慢透過窗戶，將屋子照亮，身後隱約聽到父母起床的穿衣聲。\n 他知道，新的一天又要開始忙碌了。\n 林家住在外城，涂月城外城。\n 涂月，這也是他們所在的城市名字，這是一座極其龐大的城區，其主要結構分為內外兩大塊。\n 內城是繁華的核心區所在，居住安全，物資豐厚，據說那裡是無霧區，是夜晚也不會有霧氣的絕對安全區。\n 外城則是他們所住的地域，這不是一個區域，而是由許許多多圍繞著涂月內城建造的微型小鎮，共同組成的龐大區域。\n 每個小鎮之間也有著大片農田，菜地，果園，各種加工工坊。\n 林家所住的鎮子，就是名為新餘鎮的地方。對外他們依舊是涂月人，但對內，他們只能算郊外的郊外。\n “怎麼還站在這兒啊？”身後裡屋，父親林順河披著灰白外套，正單手扣著胸前的蜈蚣扣，另一隻手抓著一件深棕色野豬皮馬甲，這是穿在外面保暖用。\n “睡不著，就看看。”林輝回頭擠出個笑容，他不想讓父母擔心。\n “唉”父親見狀似乎想到了什麼，張口欲說，卻又停了下來。\n 他面相木訥，皮膚泛黑，身材健壯，頭髮花白，工作是在鎮上的制油工坊做主管，平日裡工錢不算多，但也絕不少，夠養活一家三口綽綽有餘。\n 若是正常世界，這樣的日子算是不錯了。但架不住他們所在的環境不正常。\n 嘆口氣，林順河沒說什麼，穿上馬甲，開啟門鎖，推門而去。\n “阿河你還沒吃東西？”後面母親姚珊追出來叫道。\n “不吃了，去坊子混點公餐。”林順河頭也不回，擺擺手穿過院子，開了院門走出去，很快消失在門外。\n 此時的院子重新恢復到了林家原有的樣子。\n 一口白石水井，兩顆黑乎乎歪脖子樹，一套灰石頭桌凳，桌上還刻了模糊不清的棋盤線和些許黑色字跡。\n 四周用高低不齊的土牆圍了起來，牆角還堆放了不少乾柴和舊傢俱農具。\n 林輝目送父親離開，也跟著拿了件外套，慢慢走出去。\n 身後母親追出來，給他手裡塞了個菜包子，熱騰騰的帶著淡淡菜油香氣，被他幾口便塞進肚子。\n “你沒事幹，就去外面曬曬太陽，我一會兒也要去做工，下午點回來。”母親姚珊換了身亮白棉裙，戴好袖套，背上小挎包，打算出門了。\n 林輝記得她是在鎮上的一家制衣工坊上班，是裡面的老員工，已經幹了十多年了。\n “今天東家小姐要過來巡查，你的事，我找機會給問問提一下，看有沒有希望。你先別急。”母親小心叮囑道。\n “嗯。”林輝點頭。\n 在覺醒記憶前，他已經到了該出去做事賺錢的年紀。\n 可因為之前沒學什麼手藝，早些時間渾渾噩噩，直到到了年紀才因為覺醒回過神來，可這個時間已經有些晚了。\n 父母最近都在忙著給他張羅以後的工作。\n 母親見狀，左右看了看，湊近過來，神秘兮兮的壓低聲音道。\n “我說別急可不是安慰你，你爹前陣子弄了個私單，你別傳出去，昨個單子完成了，對面東家答應給你保個頂好的出路”\n “私單！？”林輝面色一驚，這要是被抓住了可是要出事的。\n “你別往外說就行，放心，沒事，周圍不少作坊都幹過。”母親顯然習以為常。\n 林輝也不再說話了，這事幹都幹了，現在說什麼都沒用。\n 這鎮上大大小小作坊十多個，真要細算，怕是不少主管都幹過，要抓，一抓一大把。\n 他只是擔心這個風險.要知道他爹所在的油坊，可是鎮上的產權，要是被發現，後果比私人油坊私單更嚴重，甚至可能要被髮配開荒當炮灰。\n “今天你爹應該就能帶口信回來，你耐心等著，沒事白天可以在周圍轉轉，舒活舒活身體，記得敲鐘就趕緊回來就是。”母親繼續道。\n “好我知道了”林輝腦子有些亂，只能點頭。\n 他這兩天接受了大量記憶衝擊，此時對自己，對以後，壓根沒個具體的規劃。只能走一步算一步。\n 看著母親姚珊簡單梳理了頭髮，戴上一根豆莢玉簪便快步出了門。\n 林輝跟著走到院子，站在院門口，朝外望去。\n 外面是條橫向的寬闊黃泥路，路邊點綴著稀疏綠草，路面凹凸不平，有些地方還有水窪，顯然前陣子才下過雨。\n 一棟棟房屋連結著黃泥路，宛如曲線上的一顆顆芝麻點，順著他此時的視線延伸向遠處。\n 房屋有大有小，有土屋也有石頭院落，但所有屋子都有一個共同點——那就是修建了高高的圍牆。\n 此時路上來來往往已經有了不少車馬人流，運貨的推車，牛車，帶人的馬車，趕著雞鴨準備放養的孩童，還有最多的走出家門前往鎮上中心做事的人們。\n 林輝抬腳走出去，聞著淡淡的黃泥腥味，順著路往鎮上走去。\n 道路兩側，房屋之間是大片的田地菜地，有人已經進到地裡開始勞作。\n “小輝啊，最近是休息不好還是怎麼的，咋地臉色這麼白？”沒走幾步，一邊除草著的白鬍子大爺抬頭出聲問。\n 他叫李全中，就住在林家大院右邊，算是多年的老鄰居了。家裡有個獨子在鎮上當理髮師傅。\n “嗯，最近睡得不好.有點鬧頭疼。”林輝隨便找了個理由。\n “那得注意點了，回去多喝點熱水，實在不行，就領點福肉吃吃，好得快。”李全中笑呵呵道。\n 福肉\n 林輝心頭微動。\n 涂月城區人口極其龐大，外鎮人口最多，按理說這時代這種落後生產力，要想維持這麼大的城市，是件極其困難之事，但奇怪就奇怪在這裡。\n 城裡衙門每隔一段時間就會固定發放一種名叫萬福肉的東西。\n 這是一種聞起來吃起來都很香的肉質，不知道是什麼生物身上割下來的，每人每個月都能領一大塊十多斤。\n 重點還不是這個，而是這個萬福肉，除開可以充飢，還能包治百病！\n 甭管什麼病，只要吃那麼一小塊，很快就能藥到病除，醫生都不用看。\n 林輝回過神，和李大爺隨意聊了幾句，便又順著黃泥路走開了。\n 只是沒走多久，他便見到前面路邊一家小院子外，圍了不少鎮民。\n 林家的幾個其他房的堂弟堂妹也在看熱鬧。遠遠看到他過來，幾個小子一鬨而散，朝著他拉眼角做鬼臉，還有個膽大的遠遠朝他吐口水。\n 林輝作勢要衝過去，嚇得小子們連忙跑遠。\n 他們這一房在林家大族裡算是普普通通，之所以他這麼被這些小子厭惡，還是因為覺醒之前一事無成，沒本事也沒容貌，和其餘幾個同齡人相比，林輝壓根就是個遊手好閒的混子，成天躺家裡啥事也不幹。\n 在這種大人小孩都要幹活才能維持生計的年代，躺家裡啃老本就是件被人瞧不起的事。\n 趕走小子們，林輝走近過去，站到人群外，墊腳往裡張望。\n 他一邊望，一邊隱約聽到右邊幾人小聲的在討論嘀咕，什麼山鬼，桃樹精，報仇之類詞彙。\n 左邊幾個大媽則是在輕輕蠕動嘴唇，整齊的唸誦祈禱著什麼。\n 更裡面一點，兩個身著黑色官差勁裝的持刀差人，人高馬大宛如兩堵牆，擋著外面看熱鬧的鎮民。\n 兩人旁若無人的小聲聊天著，說得也不知道是哪個鎮子的方言，根本聽不懂。\n 林輝往更裡面望去，隱約看到院子大門敞開，地上有細微的血色痕跡。\n 一條被啃得血肉模糊露出白骨的人腿，從門口清晰可見。\n “還看。”一旁一個探頭探腦的光屁股小孩被他媽從後面揪住耳朵，使勁拽了出去。\n “看到沒，這就是玉符沒及時更換的下場，叫你以後還敢去動玉符！”\n “放！痛痛！不敢了，再也不敢了啊！”小孩慘叫著被慢慢拉走。\n 林輝目送著母子離開，身著灰色長衣的他，在同樣打扮的人群裡毫不起眼。\n “這可不是玉符的事。”一旁一個壓低的女聲忽然道。\n 林輝轉頭看去，見一個灰長衣黑皮褲的高大女子，不知道什麼時候走到了自己身後。\n 女子面孔和他有些相似，頭髮簡單綁了兩個包子，此時手裡拿著一個醬油罐子，顯然才去小賣鋪打醬油了回來。\n “走了，別看了，這是白天裡遭了闖門鬼。”女子叫林紅珍，是林家大房的長女，也是林輝族內的堂姐。年紀比他大了一歲。\n “闖門鬼”\n 林輝重複了遍，臉色有些難看起來。這是對所有白天襲擊人類的怪物猛獸的統稱，並不是真指鬼。\n 。"
+        }
+      },
+      "webview_applied_keys": [],
+      "webview_trace": [],
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "runtime": {
+    "node_bin": "/opt/homebrew/bin/node",
+    "validator_root": "/Users/mantou/Documents/idea/xiangseSkill/tools/validator",
+    "validator_cli": "/Users/mantou/Documents/idea/xiangseSkill/tools/validator/src/cli.js",
+    "command": [
+      "/opt/homebrew/bin/node",
+      "/Users/mantou/Documents/idea/xiangseSkill/tools/validator/src/cli.js",
+      "run",
+      "--input",
+      "/var/folders/n9/wnjljy094376z_ydggc82dyc0000gn/T/xbs_sim_wukwgdho/wcshuba_source.import_fixed.json",
+      "--mode",
+      "fixture",
+      "--engine",
+      "auto",
+      "--webview-timeout",
+      "25",
+      "--keyword",
+      "腐朽世界",
+      "--page-index",
+      "1",
+      "--offset",
+      "0",
+      "--book-index",
+      "0",
+      "--chapter-index",
+      "0",
+      "--min-content-length",
+      "50",
+      "--output",
+      "/var/folders/n9/wnjljy094376z_ydggc82dyc0000gn/T/xbs_sim_wukwgdho/validator.report.json",
+      "--fixtures",
+      "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/wcshuba"
+    ],
+    "returncode": 0
+  }
+}

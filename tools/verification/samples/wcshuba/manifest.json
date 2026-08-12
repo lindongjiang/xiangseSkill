@@ -1,0 +1,26 @@
+{
+  "searchBook": {
+    "url": "https://www.wcshuba.com/search/?searchkey=%E8%85%90%E6%9C%BD%E4%B8%96%E7%95%8C",
+    "file": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/wcshuba/searchBook.html",
+    "ok": true,
+    "bytes": 68225
+  },
+  "bookDetail": {
+    "url": "https://www.wcshuba.com/book/3254.html",
+    "file": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/wcshuba/bookDetail.html",
+    "ok": true,
+    "bytes": 45729
+  },
+  "chapterList": {
+    "url": "https://www.wcshuba.com/chapterlist/3254.html",
+    "file": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/wcshuba/chapterList.html",
+    "ok": true,
+    "bytes": 47856
+  },
+  "chapterContent": {
+    "url": "https://www.wcshuba.com/read/3254/1870737.html",
+    "file": "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/wcshuba/chapterContent.html",
+    "ok": true,
+    "bytes": 35734
+  }
+}

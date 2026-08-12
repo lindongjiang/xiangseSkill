@@ -66,7 +66,7 @@
       "runtime_engine": "http",
       "blocked": false,
       "blocked_reason": "",
-      "elapsed_ms": 123,
+      "elapsed_ms": 120,
       "request": {
         "method": "GET",
         "url": "https://www.novel543.com/bookstack/xuanhuan/",
@@ -113,7 +113,7 @@
       "runtime_engine": "http",
       "blocked": false,
       "blocked_reason": "",
-      "elapsed_ms": 45,
+      "elapsed_ms": 44,
       "request": {
         "method": "GET",
         "url": "https://www.novel543.com/0618696941/",
@@ -167,7 +167,7 @@
       "runtime_engine": "http",
       "blocked": false,
       "blocked_reason": "",
-      "elapsed_ms": 36,
+      "elapsed_ms": 37,
       "request": {
         "method": "GET",
         "url": "https://www.novel543.com/0618696941/dir",
@@ -206,7 +206,7 @@
       "runtime_engine": "http",
       "blocked": false,
       "blocked_reason": "",
-      "elapsed_ms": 33,
+      "elapsed_ms": 34,
       "request": {
         "method": "GET",
         "url": "https://www.novel543.com/0618696941/8096_1.html",
@@ -247,7 +247,7 @@
       "/Users/mantou/Documents/idea/xiangseSkill/tools/validator/src/cli.js",
       "run",
       "--input",
-      "/var/folders/n9/wnjljy094376z_ydggc82dyc0000gn/T/xbs_sim_1pg8189r/novel543_source.import_fixed.json",
+      "/var/folders/n9/wnjljy094376z_ydggc82dyc0000gn/T/xbs_sim_2wwzekie/novel543_source.import_fixed.json",
       "--mode",
       "fixture",
       "--engine",
@@ -267,7 +267,7 @@
       "--min-content-length",
       "50",
       "--output",
-      "/var/folders/n9/wnjljy094376z_ydggc82dyc0000gn/T/xbs_sim_1pg8189r/validator.report.json",
+      "/var/folders/n9/wnjljy094376z_ydggc82dyc0000gn/T/xbs_sim_2wwzekie/validator.report.json",
       "--fixtures",
       "/Users/mantou/Documents/idea/xiangseSkill/tools/verification/samples/novel543"
     ],

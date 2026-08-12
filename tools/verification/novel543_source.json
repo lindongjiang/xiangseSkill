@@ -28,26 +28,7 @@
       "moreKeys": {
         "pageSize": 18,
         "maxPage": 5,
-        "requestFilters": [
-          {
-            "key": "category",
-            "items": [
-              {"title": "玄幻", "value": "xuanhuan"},
-              {"title": "修真", "value": "xiuzhen"},
-              {"title": "都市", "value": "dushi"},
-              {"title": "历史", "value": "lishi"},
-              {"title": "网游", "value": "wangyou"},
-              {"title": "科幻", "value": "kehuan"},
-              {"title": "女频", "value": "nvpin"},
-              {"title": "灵异", "value": "lingyi"},
-              {"title": "同人", "value": "tongren"},
-              {"title": "军事", "value": "junshi"},
-              {"title": "悬疑", "value": "xuanyi"},
-              {"title": "穿越", "value": "chuanyue"},
-              {"title": "其它", "value": "other"}
-            ]
-          }
-        ]
+        "requestFilters": "category\n玄幻::xuanhuan\n修真::xiuzhen\n都市::dushi\n历史::lishi\n网游::wangyou\n科幻::kehuan\n女频::nvpin\n灵异::lingyi\n同人::tongren\n军事::junshi\n悬疑::xuanyi\n穿越::chuanyue\n其它::other\n"
       }
     },
     "bookDetail": {
@@ -108,26 +89,7 @@
         "moreKeys": {
           "pageSize": 18,
           "maxPage": 3,
-          "requestFilters": [
-            {
-              "key": "category",
-              "items": [
-                {"title": "玄幻", "value": "xuanhuan"},
-                {"title": "修真", "value": "xiuzhen"},
-                {"title": "都市", "value": "dushi"},
-                {"title": "历史", "value": "lishi"},
-                {"title": "网游", "value": "wangyou"},
-                {"title": "科幻", "value": "kehuan"},
-                {"title": "女频", "value": "nvpin"},
-                {"title": "灵异", "value": "lingyi"},
-                {"title": "同人", "value": "tongren"},
-                {"title": "军事", "value": "junshi"},
-                {"title": "悬疑", "value": "xuanyi"},
-                {"title": "穿越", "value": "chuanyue"},
-                {"title": "其它", "value": "other"}
-              ]
-            }
-          ]
+          "requestFilters": "category\n玄幻::xuanhuan\n修真::xiuzhen\n都市::dushi\n历史::lishi\n网游::wangyou\n科幻::kehuan\n女频::nvpin\n灵异::lingyi\n同人::tongren\n军事::junshi\n悬疑::xuanyi\n穿越::chuanyue\n其它::other\n"
         }
       }
     }
